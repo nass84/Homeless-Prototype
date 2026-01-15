@@ -1,1 +1,1 @@
-export { GdsPagination } from './Pagination.js'
+export { Pagination, type PaginationProps, type PaginationMeta } from './Pagination.js'

@@ -1,4 +1,4 @@
-'use client'
+import { Link } from "../Link/Link.js"
 
 export interface BreadcrumbItem {
   text: string
@@ -29,9 +29,9 @@ export function Breadcrumbs({
       <ol className="govuk-breadcrumbs__list">
         {items.map((item, index) => (
           <li key={index} className="govuk-breadcrumbs__list-item">
-            <a href={item.href} className="govuk-breadcrumbs__link">
+            <Link href={item.href} className="govuk-breadcrumbs__link">
               {item.text}
-            </a>
+            </Link>
           </li>
         ))}
       </ol>

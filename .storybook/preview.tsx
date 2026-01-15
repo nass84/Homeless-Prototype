@@ -1,12 +1,23 @@
-import type { Preview } from '@storybook/react-vite'
-import { GDSReactProvider } from '../src/components/GDSReactProvider/GDSReactProvider.js';
+import type { Preview } from "@storybook/react-vite";
+import { GDSReactProvider } from "../src/components/GDSReactProvider/GDSReactProvider.js";
 
 const preview: Preview = {
   parameters: {
+    backgrounds: {
+      options: {
+        light: { name: "Light", value: "#ffffff" },
+        dark: { name: "Dark", value: "#1d70b8" },
+      },
+    },
+    options: {
+      storySort: {
+        order: ["Welcome", "Core", "Page Structure", "Components", "*"],
+      },
+    },
     controls: {
       matchers: {
-       color: /(background|color)$/i,
-       date: /Date$/i,
+        color: /(background|color)$/i,
+        date: /Date$/i,
       },
     },
 
@@ -14,21 +25,22 @@ const preview: Preview = {
       // 'todo' - show a11y violations in the test UI only
       // 'error' - fail CI on a11y violations
       // 'off' - skip a11y checks entirely
-      test: 'todo'
-    }
+      test: "todo",
+    },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   decorators: [
     (Story) => {
-      document.documentElement.className += ' govuk-template govuk-template--rebranded'
-      document.body.className += ' govuk-template__body js-enabled govuk-frontend-supported'
+      document.documentElement.className +=
+        " govuk-template govuk-template--rebranded";
+      document.body.className +=
+        " govuk-template__body js-enabled govuk-frontend-supported";
 
       return (
-        <>
+        <GDSReactProvider>
           <Story />
-          <GDSReactProvider />
-        </>
-      )
+        </GDSReactProvider>
+      );
     },
   ],
 };

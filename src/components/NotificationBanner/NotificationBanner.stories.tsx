@@ -1,98 +1,71 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { NotificationBanner } from './NotificationBanner.js'
-import { Link } from '../Link/Link.js'
-import { Paragraph } from '../Paragraph/Paragraph.js'
+import type { Meta, StoryObj } from "@storybook/react";
+import { NotificationBanner } from "./NotificationBanner.js";
+import { Link } from "../Link/Link.js";
 
 const meta: Meta<typeof NotificationBanner> = {
-  title: 'GDS/NotificationBanner',
+  title: "Components/Notification banner",
   component: NotificationBanner,
   parameters: {
-    layout: 'padded',
+    layout: "padded",
+    docs: {
+      description: {
+        component: `Use a notification banner to tell the user about something they need to know about, but that's not directly related to the page content.
+
+[Read more about how to use this component on the GOV.UK Design System](https://design-system.service.gov.uk/components/notification-banner/)`,
+      },
+    },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     title: {
-      control: 'text',
-      description: 'Banner title (shown in header)',
+      control: "text",
+      description: "The title of the banner (defaults based on type)",
     },
     type: {
-      control: 'radio',
-      options: ['neutral', 'success'],
-      description: 'Type of notification banner',
+      control: "radio",
+      options: ["neutral", "success"],
+      description: "The type of banner",
     },
     heading: {
-      control: 'text',
-      description: 'Content heading',
+      control: "text",
+      description: "The main heading content",
     },
     children: {
-      control: false,
-      description: 'Banner content',
+      description: "Additional content below the heading",
     },
     titleId: {
-      control: 'text',
-      description: 'ID for the title element',
+      control: "text",
+      description: "ID for the title element",
     },
     className: {
-      control: 'text',
-      description: 'Additional CSS classes',
+      control: "text",
+      description: "Additional CSS classes",
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    title: 'Important',
-    heading: 'You have 7 days left to send your application',
-    children: <Paragraph>Your application will be cancelled if you do not respond.</Paragraph>,
+    heading: (
+      <>
+        You have 7 days left to send your application.{" "}
+        <Link href="#">View application</Link>.
+      </>
+    ),
   },
-}
+};
 
 export const Success: Story = {
   args: {
-    type: 'success',
-    title: 'Success',
-    heading: 'Email sent to John Smith',
+    type: "success",
+    heading: "Training outcome recorded and trainee withdrawn",
     children: (
-      <Paragraph>
-        We sent them an email to let them know that you want to add them to your application.
-      </Paragraph>
+      <p className="govuk-body">
+        Contact <Link href="mailto:example@department.gov.uk">example@department.gov.uk</Link> if you think there's a problem.
+      </p>
     ),
   },
-}
-
-export const WithLink: Story = {
-  args: {
-    title: 'Important',
-    heading: 'New guidance published',
-    children: (
-      <Paragraph>
-        Updated guidelines for criminal damage cases are now available.
-        <br />
-        <Link href="/guidance/criminal-damage">Read the new guidance</Link>
-      </Paragraph>
-    ),
-  },
-}
-
-export const SystemMaintenance: Story = {
-  args: {
-    title: 'Information',
-    heading: 'Planned system maintenance',
-    children: (
-      <Paragraph>
-        The service will be unavailable on Saturday 16 March from 2am to 6am for essential
-        maintenance. You will not be able to access cases or submit evidence during this time.
-      </Paragraph>
-    ),
-  },
-}
-
-export const MinimalContent: Story = {
-  args: {
-    heading: 'Settings updated',
-    children: <Paragraph>Your notification preferences have been saved.</Paragraph>,
-  },
-}
+};

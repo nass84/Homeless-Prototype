@@ -4,7 +4,7 @@ import { Paragraph } from '../Paragraph/Paragraph.js'
 import { Heading } from '../Heading/Heading.js'
 
 const meta: Meta<typeof SectionBreak> = {
-  title: 'GDS/SectionBreak',
+  title: "Components/SectionBreak",
   component: SectionBreak,
   parameters: {
     layout: 'padded',

@@ -1,1 +1,1 @@
-export { Accordion } from './Accordion.js'
+export { Accordion, type AccordionProps } from './Accordion.js'

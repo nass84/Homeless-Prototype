@@ -1,1 +1,1 @@
-export { WarningText } from './WarningText.js'
+export { WarningText, type WarningTextProps } from './WarningText.js'

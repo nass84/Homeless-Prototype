@@ -1,1 +1,1 @@
-export { CookieBanner } from './CookieBanner.js'
+export { CookieBanner, type CookieBannerProps } from './CookieBanner.js'

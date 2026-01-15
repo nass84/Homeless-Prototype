@@ -1,6 +1,5 @@
-'use client'
-
 import type { ReactNode } from 'react'
+import { useGDSReact } from '../GDSReactProvider/GDSReactProvider.js'
 
 export interface LinkProps {
   href: string
@@ -27,6 +26,8 @@ export function Link({
   className = '',
   onClick = undefined,
 }: LinkProps) {
+  const { linkComponent: LinkComponent } = useGDSReact()
+
   // External links should open in new tab
   const shouldOpenInNewTab = opensInNewTab || external
 
@@ -39,26 +40,40 @@ export function Link({
   // Props for new tab links
   const newTabProps = shouldOpenInNewTab
     ? {
-        target: '_blank',
+        target: '_blank' as const,
         rel: 'noreferrer noopener',
       }
     : {}
 
   const hreflangProp = hreflang ? { hrefLang: hreflang } : {}
 
-  const onClickProp = onClick
-    ? {
-        onClick: (event: React.MouseEvent<HTMLAnchorElement>) => {
-          onClick(event)
-          event.preventDefault()
-        },
+  const handleClick = onClick
+    ? (event: React.MouseEvent<HTMLAnchorElement>) => {
+        onClick(event)
+        event.preventDefault()
       }
-    : {}
+    : undefined
 
-  return (
-    <a href={href} className={linkClass} {...newTabProps} {...hreflangProp} {...onClickProp}>
+  // Content including the visually hidden text for new tab links
+  const content = (
+    <>
       {children}
       {shouldOpenInNewTab && <span className="govuk-visually-hidden"> (opens in new tab)</span>}
-    </a>
+    </>
   )
+
+  // Common props for both native and custom link components
+  const commonProps = {
+    href,
+    className: linkClass,
+    ...newTabProps,
+    ...hreflangProp,
+    onClick: handleClick,
+  }
+
+  if (LinkComponent) {
+    return <LinkComponent {...commonProps}>{content}</LinkComponent>
+  }
+
+  return <a {...commonProps}>{content}</a>
 }

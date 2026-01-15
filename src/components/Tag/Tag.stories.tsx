@@ -1,105 +1,124 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { Tag } from './Tag.js'
+import type { Meta, StoryObj } from "@storybook/react";
+import { Tag } from "./Tag.js";
 
 const meta: Meta<typeof Tag> = {
-  title: 'GDS/Tag',
+  title: "Components/Tag",
   component: Tag,
   parameters: {
-    layout: 'padded',
+    layout: "padded",
+    docs: {
+      description: {
+        component: `Use the tag component to show users the status of something.
+
+[Read more about how to use this component on the GOV.UK Design System](https://design-system.service.gov.uk/components/tag/)`,
+      },
+    },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     children: {
-      control: 'text',
-      description: 'Tag text content',
+      control: "text",
+      description: "The tag text",
     },
     colour: {
-      control: 'radio',
+      control: "select",
       options: [
-        'grey',
-        'green',
-        'turquoise',
-        'blue',
-        'light-blue',
-        'purple',
-        'pink',
-        'red',
-        'orange',
-        'yellow',
+        "grey",
+        "green",
+        "turquoise",
+        "blue",
+        "light-blue",
+        "purple",
+        "pink",
+        "red",
+        "orange",
+        "yellow",
       ],
-      description: 'Tag colour variant',
+      description: "The tag colour",
     },
     className: {
-      control: 'text',
-      description: 'Additional CSS classes',
+      control: "text",
+      description: "Additional CSS classes",
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: 'Draft',
+    children: "Completed",
+    colour: "blue",
   },
-}
+};
 
 export const Grey: Story = {
   args: {
-    children: 'Inactive',
-    colour: 'grey',
+    children: "Inactive",
+    colour: "grey",
   },
-}
+};
 
 export const Green: Story = {
   args: {
-    children: 'Completed',
-    colour: 'green',
+    children: "New",
+    colour: "green",
   },
-}
+};
 
-export const Red: Story = {
+export const Turquoise: Story = {
   args: {
-    children: 'Urgent',
-    colour: 'red',
+    children: "Active",
+    colour: "turquoise",
   },
-}
+};
 
 export const Blue: Story = {
   args: {
-    children: 'In progress',
-    colour: 'blue',
+    children: "Pending",
+    colour: "blue",
   },
-}
+};
 
-export const Orange: Story = {
+export const LightBlue: Story = {
   args: {
-    children: 'Warning',
-    colour: 'orange',
+    children: "In progress",
+    colour: "light-blue",
   },
-}
+};
 
 export const Purple: Story = {
   args: {
-    children: 'Review',
-    colour: 'purple',
+    children: "Received",
+    colour: "purple",
   },
-}
+};
 
-export const AllColours: Story = {
-  render: () => (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-      <Tag colour="grey">Grey</Tag>
-      <Tag colour="green">Green</Tag>
-      <Tag colour="turquoise">Turquoise</Tag>
-      <Tag colour="blue">Blue</Tag>
-      <Tag colour="light-blue">Light blue</Tag>
-      <Tag colour="purple">Purple</Tag>
-      <Tag colour="pink">Pink</Tag>
-      <Tag colour="red">Red</Tag>
-      <Tag colour="orange">Orange</Tag>
-      <Tag colour="yellow">Yellow</Tag>
-    </div>
-  ),
-}
+export const Pink: Story = {
+  args: {
+    children: "Sent",
+    colour: "pink",
+  },
+};
+
+export const Red: Story = {
+  args: {
+    children: "Rejected",
+    colour: "red",
+  },
+};
+
+export const Orange: Story = {
+  args: {
+    children: "Declined",
+    colour: "orange",
+  },
+};
+
+export const Yellow: Story = {
+  args: {
+    children: "Delayed",
+    colour: "yellow",
+  },
+};

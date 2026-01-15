@@ -1,2 +1,1 @@
-export { Textarea } from './Textarea.js'
-export type { TextareaProps } from './Textarea.js'
+export { Textarea, type TextareaProps } from './Textarea.js'

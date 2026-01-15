@@ -1,4 +1,4 @@
-'use client'
+import { Link } from "../Link/Link.js"
 
 export interface FooterLink {
   text: string
@@ -7,7 +7,8 @@ export interface FooterLink {
 
 export interface FooterNavigation {
   title?: string
-  columns?: number
+  width?: 'two-thirds' | 'one-third' | 'one-half' | 'full'
+  columns?: 2 | 3
   items: FooterLink[]
 }
 
@@ -88,30 +89,35 @@ export function Footer({
 
         {/* Navigation sections */}
         {navigation && navigation.length > 0 && (
-          <div className="govuk-footer__navigation">
-            {navigation.map((section, sectionIndex) => (
-              <div
-                key={`footer-nav-${sectionIndex}`}
-                className={`govuk-footer__section${section.columns ? ` govuk-grid-column-${section.columns === 1 ? 'full' : `one-${section.columns === 2 ? 'half' : 'third'}`}` : ''}`}
-              >
-                {section.title && (
-                  <h2 className="govuk-footer__heading govuk-heading-m">{section.title}</h2>
-                )}
-                <ul className="govuk-footer__list">
-                  {section.items.map((item, itemIndex) => (
-                    <li
-                      key={`footer-nav-item-${sectionIndex}-${itemIndex}`}
-                      className="govuk-footer__list-item"
-                    >
-                      <a className="govuk-footer__link" href={item.href}>
-                        {item.text}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
+          <>
+            <div className="govuk-footer__navigation">
+              {navigation.map((section, sectionIndex) => {
+                const sectionClass = `govuk-footer__section${section.width ? ` govuk-grid-column-${section.width}` : ''}`
+                const listClass = `govuk-footer__list${section.columns ? ` govuk-footer__list--columns-${section.columns}` : ''}`
+
+                return (
+                  <div key={`footer-nav-${sectionIndex}`} className={sectionClass}>
+                    {section.title && (
+                      <h2 className="govuk-footer__heading govuk-heading-m">{section.title}</h2>
+                    )}
+                    <ul className={listClass}>
+                      {section.items.map((item, itemIndex) => (
+                        <li
+                          key={`footer-nav-item-${sectionIndex}-${itemIndex}`}
+                          className="govuk-footer__list-item"
+                        >
+                          <Link className="govuk-footer__link" href={item.href}>
+                            {item.text}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )
+              })}
+            </div>
+            <hr className="govuk-footer__section-break" />
+          </>
         )}
 
         <div className="govuk-footer__meta">
@@ -128,9 +134,9 @@ export function Footer({
                       key={`footer-meta-item-${index}`}
                       className="govuk-footer__inline-list-item"
                     >
-                      <a className="govuk-footer__link" href={item.href}>
+                      <Link className="govuk-footer__link" href={item.href}>
                         {item.text}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>

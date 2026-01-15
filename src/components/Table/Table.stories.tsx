@@ -1,127 +1,194 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { Table } from './Table.js'
-import { Tag } from '../Tag/Tag.js'
-import { Link } from '../Link/Link.js'
+import type { Meta, StoryObj } from "@storybook/react";
+import { Table } from "./Table.js";
 
 const meta: Meta<typeof Table> = {
-  title: 'GDS/Table',
+  title: "Components/Table",
   component: Table,
   parameters: {
-    layout: 'padded',
+    layout: "padded",
+    docs: {
+      description: {
+        component: `Use the table component to make information easier to compare and scan for users.
+
+[Read more about how to use this component on the GOV.UK Design System](https://design-system.service.gov.uk/components/table/)`,
+      },
+    },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     caption: {
-      control: 'text',
-      description: 'Table caption',
+      control: "text",
+      description: "The table caption",
     },
     captionSize: {
-      control: 'radio',
-      options: ['s', 'm', 'l', 'xl'],
-      description: 'Size of the caption',
+      control: "radio",
+      options: ["s", "m", "l", "xl"],
+      description: "The size of the caption",
     },
     headers: {
-      control: 'object',
-      description: 'Array of table headers',
+      description: "Array of table headers",
     },
     rows: {
-      control: 'object',
-      description: 'Array of table rows with cells',
+      description: "Array of table rows",
     },
     firstCellIsHeader: {
-      control: 'boolean',
-      description: 'Whether first cell in each row is a header',
+      control: "boolean",
+      description: "Treat the first cell in each row as a header",
+    },
+    smallTextUntilTablet: {
+      control: "boolean",
+      description: "Use smaller text on mobile for large data tables",
     },
     className: {
-      control: 'text',
-      description: 'Additional CSS classes',
+      control: "text",
+      description: "Additional CSS classes",
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
-
-const basicHeaders = [
-  { text: 'Month' },
-  { text: 'Sales', format: 'numeric' as const },
-  { text: 'Profit', format: 'numeric' as const },
-]
-
-const basicRows = [
-  {
-    cells: [
-      { text: 'January' },
-      { text: '£85', format: 'numeric' as const },
-      { text: '£12', format: 'numeric' as const },
-    ],
-  },
-  {
-    cells: [
-      { text: 'February' },
-      { text: '£165', format: 'numeric' as const },
-      { text: '£34', format: 'numeric' as const },
-    ],
-  },
-  {
-    cells: [
-      { text: 'March' },
-      { text: '£215', format: 'numeric' as const },
-      { text: '£55', format: 'numeric' as const },
-    ],
-  },
-]
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    caption: 'Sales data',
-    headers: basicHeaders,
-    rows: basicRows,
+    caption: "Dates and amounts",
+    headers: [{ text: "Date" }, { text: "Amount" }],
+    rows: [
+      { cells: [{ text: "First 6 weeks" }, { text: "£109.80 per week" }] },
+      { cells: [{ text: "Next 33 weeks" }, { text: "£109.80 per week" }] },
+      { cells: [{ text: "Total estimated pay" }, { text: "£4,282.20" }] },
+    ],
   },
-}
+};
 
-export const WithoutCaption: Story = {
+export const CustomCaptionSize: Story = {
   args: {
-    headers: basicHeaders,
-    rows: basicRows,
+    caption: "Months and rates",
+    captionSize: "l",
+    headers: [{ text: "Month" }, { text: "Rate" }],
+    rows: [
+      { cells: [{ text: "January" }, { text: "£85" }] },
+      { cells: [{ text: "February" }, { text: "£75" }] },
+      { cells: [{ text: "March" }, { text: "£165" }] },
+    ],
   },
-}
+};
 
-export const CasesList: Story = {
+export const WithRowHeaders: Story = {
   args: {
-    caption: 'Active cases',
-    captionSize: 'l',
+    caption: "Months and rates",
+    firstCellIsHeader: true,
+    headers: [{ text: "Month" }, { text: "Rate for bicycles" }, { text: "Rate for vehicles" }],
+    rows: [
+      { cells: [{ text: "January" }, { text: "£85" }, { text: "£95" }] },
+      { cells: [{ text: "February" }, { text: "£75" }, { text: "£55" }] },
+      { cells: [{ text: "March" }, { text: "£165" }, { text: "£125" }] },
+    ],
+  },
+};
+
+export const NumericData: Story = {
+  args: {
+    caption: "Months and rates",
+    firstCellIsHeader: true,
     headers: [
-      { text: 'Case reference', width: 'one-quarter' },
-      { text: 'Defendant', width: 'one-quarter' },
-      { text: 'Offence', width: 'one-quarter' },
-      { text: 'Status', width: 'one-quarter' },
+      { text: "Month" },
+      { text: "Rate for bicycles", format: "numeric" },
+      { text: "Rate for vehicles", format: "numeric" },
     ],
     rows: [
       {
         cells: [
-          { text: <Link href="/cases/2024-001234">2024/001234</Link> },
-          { text: 'John Smith' },
-          { text: 'Criminal damage' },
-          { text: <Tag colour="green">Active</Tag> },
+          { text: "January" },
+          { text: "£85", format: "numeric" },
+          { text: "£95", format: "numeric" },
         ],
       },
       {
         cells: [
-          { text: <Link href="/cases/2024-001235">2024/001235</Link> },
-          { text: 'Jane Doe' },
-          { text: 'Theft' },
-          { text: <Tag colour="blue">In progress</Tag> },
+          { text: "February" },
+          { text: "£75", format: "numeric" },
+          { text: "£55", format: "numeric" },
         ],
       },
       {
         cells: [
-          { text: <Link href="/cases/2024-001236">2024/001236</Link> },
-          { text: 'Bob Wilson' },
-          { text: 'Fraud' },
-          { text: <Tag colour="red">Urgent</Tag> },
+          { text: "March" },
+          { text: "£165", format: "numeric" },
+          { text: "£125", format: "numeric" },
         ],
       },
     ],
   },
-}
+};
+
+export const CustomColumnWidths: Story = {
+  args: {
+    caption: "Dates and amounts",
+    headers: [
+      { text: "Date", width: "one-half" },
+      { text: "Amount", width: "one-half" },
+    ],
+    rows: [
+      { cells: [{ text: "First 6 weeks" }, { text: "£109.80 per week" }] },
+      { cells: [{ text: "Next 33 weeks" }, { text: "£109.80 per week" }] },
+      { cells: [{ text: "Total estimated pay" }, { text: "£4,282.20" }] },
+    ],
+  },
+};
+
+export const SmallTextUntilTablet: Story = {
+  args: {
+    caption: "Monthly data comparison",
+    smallTextUntilTablet: true,
+    firstCellIsHeader: true,
+    headers: [
+      { text: "Month" },
+      { text: "Rate for bicycles", format: "numeric" },
+      { text: "Rate for vehicles", format: "numeric" },
+      { text: "Rate for pedestrians", format: "numeric" },
+    ],
+    rows: [
+      {
+        cells: [
+          { text: "January" },
+          { text: "£85", format: "numeric" },
+          { text: "£95", format: "numeric" },
+          { text: "£45", format: "numeric" },
+        ],
+      },
+      {
+        cells: [
+          { text: "February" },
+          { text: "£75", format: "numeric" },
+          { text: "£55", format: "numeric" },
+          { text: "£35", format: "numeric" },
+        ],
+      },
+      {
+        cells: [
+          { text: "March" },
+          { text: "£165", format: "numeric" },
+          { text: "£125", format: "numeric" },
+          { text: "£65", format: "numeric" },
+        ],
+      },
+      {
+        cells: [
+          { text: "April" },
+          { text: "£120", format: "numeric" },
+          { text: "£105", format: "numeric" },
+          { text: "£55", format: "numeric" },
+        ],
+      },
+      {
+        cells: [
+          { text: "May" },
+          { text: "£145", format: "numeric" },
+          { text: "£115", format: "numeric" },
+          { text: "£75", format: "numeric" },
+        ],
+      },
+    ],
+  },
+};

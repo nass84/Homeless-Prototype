@@ -1,1 +1,1 @@
-export { InsetText } from './InsetText.js'
+export { InsetText, type InsetTextProps } from './InsetText.js'

@@ -1,1 +1,1 @@
-export { Fieldset } from './Fieldset.js'
+export { Fieldset, type FieldsetProps } from './Fieldset.js'

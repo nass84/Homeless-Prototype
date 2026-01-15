@@ -1,1 +1,1 @@
-export { PhaseBanner } from './PhaseBanner.js'
+export { PhaseBanner, type PhaseBannerProps } from './PhaseBanner.js'

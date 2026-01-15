@@ -1,1 +1,1 @@
-export { NotificationBanner } from './NotificationBanner.js'
+export { NotificationBanner, type NotificationBannerProps } from './NotificationBanner.js'

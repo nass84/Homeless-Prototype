@@ -1,9 +1,8 @@
-'use client'
-
 export interface ExitThisPageProps {
   href?: string
   text?: string
   emergencyText?: string
+  variant?: 'button' | 'skipLink'
   className?: string
 }
 
@@ -11,8 +10,22 @@ export function ExitThisPage({
   href = 'https://www.bbc.co.uk/weather',
   text = 'Exit this page',
   emergencyText = 'Emergency',
+  variant = 'button',
   className = '',
 }: ExitThisPageProps) {
+  if (variant === 'skipLink') {
+    return (
+      <a
+        href={href}
+        className={`govuk-skip-link govuk-js-exit-this-page-skiplink${className ? ` ${className}` : ''}`}
+        rel="nofollow noreferrer"
+        data-module="govuk-skip-link"
+      >
+        {text}
+      </a>
+    )
+  }
+
   const wrapperClass = `govuk-exit-this-page${className ? ` ${className}` : ''}`
 
   return (

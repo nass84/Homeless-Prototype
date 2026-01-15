@@ -1,55 +1,38 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { InsetText } from './InsetText.js'
-import { Paragraph } from '../Paragraph/Paragraph.js'
-import { Link } from '../Link/Link.js'
+import type { Meta, StoryObj } from "@storybook/react";
+import { InsetText } from "./InsetText.js";
 
 const meta: Meta<typeof InsetText> = {
-  title: 'GDS/InsetText',
+  title: "Components/Inset text",
   component: InsetText,
   parameters: {
-    layout: 'padded',
+    layout: "padded",
+    docs: {
+      description: {
+        component: `Use the inset text component to differentiate a block of text from the content that surrounds it.
+
+[Read more about how to use this component on the GOV.UK Design System](https://design-system.service.gov.uk/components/inset-text/)`,
+      },
+    },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     children: {
-      control: false,
-      description: 'Content to display within the inset text block',
+      control: "text",
+      description: "The content to display inside the inset text",
     },
     className: {
-      control: 'text',
-      description: 'Additional CSS classes',
+      control: "text",
+      description: "Additional CSS classes",
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
     children:
-      'It can take up to 8 weeks to register a lasting power of attorney if there are no mistakes in the application.',
+      "It can take up to 8 weeks to register a lasting power of attorney if there are no mistakes in the application.",
   },
-}
-
-export const WithParagraph: Story = {
-  args: {
-    children: (
-      <Paragraph>
-        You must tell us immediately if your circumstances change, as this could affect your
-        entitlement to benefits.
-      </Paragraph>
-    ),
-  },
-}
-
-export const WithLink: Story = {
-  args: {
-    children: (
-      <>
-        You may be entitled to legal aid.
-        <Link href="#">Check if you qualify for legal aid</Link>.
-      </>
-    ),
-  },
-}
+};

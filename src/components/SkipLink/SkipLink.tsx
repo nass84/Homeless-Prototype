@@ -1,6 +1,5 @@
-'use client'
-
 import type { ReactNode } from 'react'
+import { Link } from '../Link/Link.js'
 
 export interface SkipLinkProps {
   href?: string
@@ -16,8 +15,8 @@ export function SkipLink({
   const skipLinkClass = `govuk-skip-link${className ? ` ${className}` : ''}`
 
   return (
-    <a href={href} className={skipLinkClass} data-module="govuk-skip-link">
+    <Link href={href} className={skipLinkClass} data-module="govuk-skip-link">
       {children}
-    </a>
+    </Link>
   )
 }

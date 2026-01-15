@@ -12,7 +12,7 @@ export interface RadioOption {
   conditionalContent?: ReactNode
 }
 
-export interface RadioGroupProps {
+export interface RadiosProps {
   name: string
   legend?: string | ReactNode
   hint?: string
@@ -38,7 +38,7 @@ export function Radios({
   onChange,
   value,
   defaultValue,
-}: RadioGroupProps) {
+}: RadiosProps) {
   const [internalValue, setInternalValue] = useState<string | undefined>(defaultValue)
 
   // Determine if controlled or uncontrolled

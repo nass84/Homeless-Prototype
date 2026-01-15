@@ -1,223 +1,232 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { Radios } from './Radios.js'
-import { TextInput } from '../TextInput/TextInput.js'
-import { Textarea } from '../Textarea/Textarea.js'
+import type { Meta, StoryObj } from "@storybook/react";
+import { Radios } from "./Radios.js";
 
 const meta: Meta<typeof Radios> = {
-  title: 'GDS/Radios',
+  title: "Components/Radios",
   component: Radios,
   parameters: {
-    layout: 'padded',
+    layout: "padded",
+    docs: {
+      description: {
+        component: `Use the radios component when users can only select one option from a list.
+
+[Read more about how to use this component on the GOV.UK Design System](https://design-system.service.gov.uk/components/radios/)`,
+      },
+    },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     name: {
-      control: 'text',
-      description: 'Name attribute for the radio group',
+      control: "text",
+      description: "The name attribute for the radio group",
     },
     legend: {
-      control: 'text',
-      description: 'Legend text or JSX element',
+      control: "text",
+      description: "The legend text for the fieldset",
     },
     hint: {
-      control: 'text',
-      description: 'Optional hint text',
+      control: "text",
+      description: "Hint text to help the user",
     },
     options: {
-      control: 'object',
-      description: 'Array of radio options',
+      description: "Array of radio options",
     },
     error: {
-      control: 'text',
-      description: 'Error message to display',
+      control: "text",
+      description: "Error message to display",
     },
     legendSize: {
-      control: 'radio',
-      options: ['xl', 'l', 'm', 's'],
-      description: 'Size of the legend text',
+      control: "radio",
+      options: ["xl", "l", "m", "s"],
+      description: "The size of the legend",
     },
     inline: {
-      control: 'boolean',
-      description: 'Display radios in a horizontal line',
+      control: "boolean",
+      description: "Display radios inline (side by side)",
     },
     small: {
-      control: 'boolean',
-      description: 'Use smaller radio styling',
-    },
-    onChange: {
-      action: 'changed',
-      description: 'Callback when selection changes',
-    },
-    defaultValue: {
-      control: 'text',
-      description: 'Default selected value',
+      control: "boolean",
+      description: "Use smaller radio buttons",
     },
   },
-  args: {
-    onChange: (value: string) => console.log('Selected:', value),
-  },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
-
-const basicOptions = [
-  { label: 'England', value: 'england' },
-  { label: 'Scotland', value: 'scotland' },
-  { label: 'Wales', value: 'wales' },
-  { label: 'Northern Ireland', value: 'northern-ireland' },
-]
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    name: 'where-do-you-live',
-    legend: 'Where do you live?',
-    options: basicOptions,
-  },
-}
-
-export const WithHint: Story = {
-  args: {
-    name: 'passport-country',
-    legend: 'What country issued your passport?',
-    hint: 'This is the country that appears on your passport',
-    options: basicOptions,
-  },
-}
-
-export const WithError: Story = {
-  args: {
-    name: 'country-error',
-    legend: 'What country do you live in?',
-    options: basicOptions,
-    error: 'Select the country where you live',
-  },
-}
-
-export const WithHints: Story = {
-  args: {
-    name: 'contact-method',
-    legend: 'How would you prefer to be contacted?',
+    name: "where-do-you-live",
+    legend: "Where do you live?",
     options: [
-      {
-        label: 'Email',
-        value: 'email',
-        hint: 'We will only use this to send you updates',
-      },
-      {
-        label: 'Phone',
-        value: 'phone',
-        hint: 'We will call during office hours',
-      },
-      {
-        label: 'Text message',
-        value: 'text',
-        hint: 'We will send you a text message',
-      },
+      { label: "England", value: "england" },
+      { label: "Scotland", value: "scotland" },
+      { label: "Wales", value: "wales" },
+      { label: "Northern Ireland", value: "northern-ireland" },
     ],
   },
-}
+  parameters: {
+    docs: {
+      story: {
+        inline: false,
+        iframeHeight: 325,
+      },
+    },
+  },
+};
+
+export const WithoutHeading: Story = {
+  args: {
+    name: "where-do-you-live-no-heading",
+    legend: "Where do you live?",
+    legendSize: "m",
+    options: [
+      { label: "England", value: "england" },
+      { label: "Scotland", value: "scotland" },
+      { label: "Wales", value: "wales" },
+      { label: "Northern Ireland", value: "northern-ireland" },
+    ],
+  },
+};
 
 export const Inline: Story = {
   args: {
-    name: 'yes-no',
-    legend: 'Do you have a driving licence?',
-    options: [
-      { label: 'Yes', value: 'yes' },
-      { label: 'No', value: 'no' },
-    ],
+    name: "changed-name",
+    legend: "Have you changed your name?",
+    hint: "This includes changing your last name or spelling your name differently.",
     inline: true,
-  },
-}
-
-export const Small: Story = {
-  args: {
-    name: 'small-radios',
-    legend: 'Filter results',
-    legendSize: 's',
     options: [
-      { label: 'Most recent', value: 'recent' },
-      { label: 'Most relevant', value: 'relevant' },
-      { label: 'Alphabetical', value: 'alphabetical' },
+      { label: "Yes", value: "yes" },
+      { label: "No", value: "no" },
     ],
-    small: true,
   },
-}
+};
+
+export const WithHints: Story = {
+  args: {
+    name: "sign-in",
+    legend: "How do you want to sign in?",
+    options: [
+      {
+        label: "Sign in with Government Gateway",
+        value: "government-gateway",
+        hint: "You'll have a user ID if you've registered for Self Assessment or filed a tax return online before.",
+      },
+      {
+        label: "Sign in with GOV.UK One Login",
+        value: "govuk-one-login",
+        hint: "If you don't have a GOV.UK One Login, you can create one.",
+      },
+    ],
+  },
+};
 
 export const WithDivider: Story = {
   args: {
-    name: 'organization-type',
-    legend: 'What type of organization are you?',
+    name: "where-do-you-live-divider",
+    legend: "Where do you live?",
     options: [
-      { label: 'Government department', value: 'government' },
-      { label: 'Local authority', value: 'local-authority' },
-      { label: 'NHS trust', value: 'nhs' },
-      { label: 'None of these', value: 'none', divider: true },
+      { label: "England", value: "england" },
+      { label: "Scotland", value: "scotland" },
+      { label: "Wales", value: "wales" },
+      { label: "Northern Ireland", value: "northern-ireland" },
+      {
+        label: "I am a British citizen living abroad",
+        value: "abroad",
+        divider: true,
+      },
     ],
   },
-}
+};
 
-export const WithConditionalContent: Story = {
+export const ConditionallyRevealing: Story = {
   args: {
-    name: 'contact-details',
-    legend: 'How can we contact you?',
+    name: "contact",
+    legend: "How would you prefer to be contacted?",
+    hint: "Select one option.",
     options: [
       {
-        label: 'Email',
-        value: 'email',
+        label: "Email",
+        value: "email",
         conditionalContent: (
-          <TextInput
-            id="email-address"
-            name="email-address"
-            label="Email address"
-            type="email"
-            hint="We'll only use this to send you updates"
-            className="govuk-!-width-two-thirds"
-          />
+          <div className="govuk-form-group">
+            <label className="govuk-label" htmlFor="contact-by-email">
+              Email address
+            </label>
+            <input
+              className="govuk-input govuk-!-width-one-third"
+              id="contact-by-email"
+              name="contact-by-email"
+              type="email"
+              spellCheck={false}
+              autoComplete="email"
+            />
+          </div>
         ),
       },
       {
-        label: 'Phone',
-        value: 'phone',
+        label: "Phone",
+        value: "phone",
         conditionalContent: (
-          <TextInput
-            id="phone-number"
-            name="phone-number"
-            label="Phone number"
-            type="tel"
-            hint="Include your country code if outside the UK"
-            className="govuk-!-width-one-third"
-          />
+          <div className="govuk-form-group">
+            <label className="govuk-label" htmlFor="contact-by-phone">
+              Phone number
+            </label>
+            <input
+              className="govuk-input govuk-!-width-one-third"
+              id="contact-by-phone"
+              name="contact-by-phone"
+              type="tel"
+              autoComplete="tel"
+            />
+          </div>
         ),
       },
       {
-        label: 'Post',
-        value: 'post',
+        label: "Text message",
+        value: "text",
         conditionalContent: (
-          <Textarea
-            id="postal-address"
-            name="postal-address"
-            label="Postal address"
-            hint="Include your postcode"
-            rows={5}
-            className="govuk-!-width-two-thirds"
-          />
+          <div className="govuk-form-group">
+            <label className="govuk-label" htmlFor="contact-by-text">
+              Mobile phone number
+            </label>
+            <input
+              className="govuk-input govuk-!-width-one-third"
+              id="contact-by-text"
+              name="contact-by-text"
+              type="tel"
+              autoComplete="tel"
+            />
+          </div>
         ),
       },
     ],
   },
-}
+};
 
-export const WithDefault: Story = {
+export const Small: Story = {
   args: {
-    name: 'default-selected',
-    legend: 'What is your employment status?',
+    name: "filter",
+    legend: "Filter",
+    legendSize: "m",
+    small: true,
     options: [
-      { label: 'Employed', value: 'employed' },
-      { label: 'Self-employed', value: 'self-employed' },
-      { label: 'Unemployed', value: 'unemployed' },
-      { label: 'Retired', value: 'retired' },
+      { label: "Monthly", value: "monthly" },
+      { label: "Yearly", value: "yearly" },
     ],
-    defaultValue: 'employed',
   },
-}
+};
+
+export const WithError: Story = {
+  args: {
+    name: "where-do-you-live-error",
+    legend: "Where do you live?",
+    error: "Select where you live",
+    options: [
+      { label: "England", value: "england" },
+      { label: "Scotland", value: "scotland" },
+      { label: "Wales", value: "wales" },
+      { label: "Northern Ireland", value: "northern-ireland" },
+    ],
+  },
+};

@@ -1,5 +1,3 @@
-'use client'
-
 import type { ReactNode } from 'react'
 
 export interface CheckboxOption {
@@ -12,7 +10,7 @@ export interface CheckboxOption {
   conditionalContent?: ReactNode
 }
 
-export interface CheckboxGroupProps {
+export interface CheckboxesProps {
   name: string
   legend: string | ReactNode
   hint?: string
@@ -26,7 +24,7 @@ export interface CheckboxGroupProps {
   labelClassName?: string
 }
 
-export function CheckboxGroup({
+export function Checkboxes({
   name,
   legend,
   hint,
@@ -38,7 +36,7 @@ export function CheckboxGroup({
   defaultValue = [],
   checkboxesClassName = '',
   labelClassName = '',
-}: CheckboxGroupProps) {
+}: CheckboxesProps) {
   const hintId = hint ? `${name}-hint` : undefined
   const errorId = error ? `${name}-error` : undefined
 

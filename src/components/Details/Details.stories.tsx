@@ -1,91 +1,47 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { Details } from './Details.js'
-import { Paragraph } from '../Paragraph/Paragraph.js'
-import { List } from '../List/List.js'
+import type { Meta, StoryObj } from "@storybook/react";
+import { Details } from "./Details.js";
 
 const meta: Meta<typeof Details> = {
-  title: 'GDS/Details',
+  title: "Components/Details",
   component: Details,
   parameters: {
-    layout: 'padded',
+    layout: "padded",
+    docs: {
+      description: {
+        component: `Make a page easier to scan by letting users reveal more detailed information only if they need it.
+
+[Read more about how to use this component on the GOV.UK Design System](https://design-system.service.gov.uk/components/details/)`,
+      },
+    },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     summary: {
-      control: 'text',
-      description: 'Summary text that acts as the toggle button',
+      control: "text",
+      description: "The summary text that users click to expand",
     },
     children: {
-      control: false,
-      description: 'Content to show/hide',
+      control: "text",
+      description: "The content revealed when expanded",
     },
     open: {
-      control: 'boolean',
-      description: 'Whether details should be open by default',
+      control: "boolean",
+      description: "Whether the details are expanded by default",
     },
     className: {
-      control: 'text',
-      description: 'Additional CSS classes',
-    },
-    onToggle: {
-      action: 'ontoggle',
-      description: 'Callback when details is opened/closed',
+      control: "text",
+      description: "Additional CSS classes",
     },
   },
-  args: {
-    onToggle: (event) => console.log('Details toggled:', event.currentTarget.open),
-  },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    summary: 'Help with nationality',
-    children: (
-      <Paragraph>
-        We need to know your nationality so we can work out which elections you are entitled to vote
-        in. If you cannot provide your nationality, you will have to send copies of identity
-        documents through the post.
-      </Paragraph>
-    ),
+    summary: "Help with nationality",
+    children:
+      "We need to know your nationality so we can work out which elections you're entitled to vote in. If you cannot provide your nationality, you'll have to send copies of identity documents through the post.",
   },
-}
-
-export const OpenByDefault: Story = {
-  args: {
-    summary: 'What happens next',
-    open: true,
-    children: (
-      <div>
-        <Paragraph>
-          We will send you an email to let you know the outcome. You will usually get a decision
-          within 5 working days.
-        </Paragraph>
-        <Paragraph>
-          If your application is successful, you will get your new passport within 3 weeks.
-        </Paragraph>
-      </div>
-    ),
-  },
-}
-
-export const WithList: Story = {
-  args: {
-    summary: 'What you will need',
-    children: (
-      <div>
-        <Paragraph>You will need to provide:</Paragraph>
-        <List
-          items={[
-            'your current passport',
-            '2 identical passport photos',
-            'supporting documents',
-            'payment',
-          ]}
-        />
-      </div>
-    ),
-  },
-}
+};

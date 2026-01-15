@@ -1,1 +1,1 @@
-export { ServiceNavigation, type ServiceNavigationItem } from './ServiceNavigation.js'
+export { ServiceNavigation, type ServiceNavigationProps, type ServiceNavigationItem } from './ServiceNavigation.js'

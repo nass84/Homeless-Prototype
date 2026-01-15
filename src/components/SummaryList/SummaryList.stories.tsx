@@ -1,184 +1,286 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { SummaryList } from './SummaryList.js'
-import { Tag } from '../Tag/Tag.js'
+import type { Meta, StoryObj } from "@storybook/react";
+import { SummaryList } from "./SummaryList.js";
 
 const meta: Meta<typeof SummaryList> = {
-  title: 'GDS/SummaryList',
+  title: "Components/Summary list",
   component: SummaryList,
   parameters: {
-    layout: 'padded',
+    layout: "padded",
+    docs: {
+      description: {
+        component: `Use the summary list to summarise information, for example, a user's responses at the end of a form.
+
+[Read more about how to use this component on the GOV.UK Design System](https://design-system.service.gov.uk/components/summary-list/)`,
+      },
+    },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     rows: {
-      control: 'object',
-      description: 'Array of summary list rows',
+      description: "Array of key-value rows",
     },
     noBorder: {
-      control: 'boolean',
-      description: 'Remove borders from the list',
+      control: "boolean",
+      description: "Remove borders from the summary list",
+    },
+    card: {
+      description: "Wrap the summary list in a card with a title",
     },
     className: {
-      control: 'text',
-      description: 'Additional CSS classes',
+      control: "text",
+      description: "Additional CSS classes",
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
-
-const personalDetails = [
-  {
-    key: 'Name',
-    value: 'John Smith',
-    actions: [
-      {
-        href: '#',
-        text: 'Change',
-        visuallyHiddenText: 'name',
-      },
-    ],
-  },
-  {
-    key: 'Date of birth',
-    value: '15 March 1980',
-    actions: [
-      {
-        href: '#',
-        text: 'Change',
-        visuallyHiddenText: 'date of birth',
-      },
-    ],
-  },
-  {
-    key: 'Address',
-    value: (
-      <>
-        123 High Street
-        <br />
-        Manchester
-        <br />
-        M1 2AB
-      </>
-    ),
-    actions: [
-      {
-        href: '#',
-        text: 'Change',
-        visuallyHiddenText: 'address',
-      },
-    ],
-  },
-  {
-    key: 'Contact number',
-    value: '07700 900 123',
-    actions: [
-      {
-        href: '#',
-        text: 'Change',
-        visuallyHiddenText: 'contact number',
-      },
-    ],
-  },
-]
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    rows: personalDetails,
+    rows: [
+      {
+        key: "Name",
+        value: "Sarah Philips",
+        actions: [{ href: "#", text: "Change", visuallyHiddenText: "name" }],
+      },
+      {
+        key: "Date of birth",
+        value: "5 January 1978",
+        actions: [
+          { href: "#", text: "Change", visuallyHiddenText: "date of birth" },
+        ],
+      },
+      {
+        key: "Address",
+        value: (
+          <>
+            72 Guild Street
+            <br />
+            London
+            <br />
+            SE23 6FH
+          </>
+        ),
+        actions: [{ href: "#", text: "Change", visuallyHiddenText: "address" }],
+      },
+      {
+        key: "Contact details",
+        value: (
+          <>
+            07700 900457
+            <br />
+            sarah.phillips@example.com
+          </>
+        ),
+        actions: [
+          { href: "#", text: "Change", visuallyHiddenText: "contact details" },
+        ],
+      },
+    ],
   },
-}
+};
 
 export const WithoutActions: Story = {
   args: {
     rows: [
-      { key: 'Name', value: 'John Smith' },
-      { key: 'Date of birth', value: '15 March 1980' },
-      { key: 'Email', value: 'john.smith@example.com' },
-    ],
-  },
-}
-
-export const NoBorder: Story = {
-  args: {
-    rows: [
-      { key: 'Total', value: '156' },
-      { key: 'Active', value: '89' },
-      { key: 'Pending', value: '45' },
-      { key: 'Closed', value: '22' },
-    ],
-    noBorder: true,
-  },
-}
-
-export const Application: Story = {
-  args: {
-    rows: [
       {
-        key: 'Application type',
-        value: 'Legal aid application',
+        key: "Name",
+        value: "Sarah Philips",
       },
       {
-        key: 'Submitted',
-        value: '15 March 2024',
+        key: "Date of birth",
+        value: "5 January 1978",
       },
       {
-        key: 'Status',
-        value: <Tag colour="blue">Under review</Tag>,
-      },
-      {
-        key: 'Reference number',
-        value: 'LA-2024-001234',
-      },
-      {
-        key: 'Supporting documents',
-        value: '5 documents uploaded',
-        actions: [
-          {
-            href: '#',
-            text: 'View',
-          },
-          {
-            href: '#',
-            text: 'Add more',
-          },
-        ],
-      },
-    ],
-  },
-}
-
-export const MixedContent: Story = {
-  args: {
-    rows: [
-      {
-        key: 'Court',
+        key: "Address",
         value: (
           <>
-            Manchester Crown Court
+            72 Guild Street
             <br />
-            Court Room 3
+            London
+            <br />
+            SE23 6FH
           </>
         ),
       },
       {
-        key: 'Judge',
-        value: 'Hon. Mr Justice Williams',
-      },
-      {
-        key: 'Legal representation',
-        value: <Tag colour="green">Assigned</Tag>,
-        actions: [
-          {
-            href: '#',
-            text: 'View details',
-          },
-        ],
-      },
-      {
-        key: 'Estimated duration',
-        value: '2 hours',
+        key: "Contact details",
+        value: (
+          <>
+            07700 900457
+            <br />
+            sarah.phillips@example.com
+          </>
+        ),
       },
     ],
   },
-}
+};
+
+export const MixedActions: Story = {
+  args: {
+    rows: [
+      {
+        key: "Name",
+        value: "Sarah Philips",
+        actions: [{ href: "#", text: "Change", visuallyHiddenText: "name" }],
+      },
+      {
+        key: "Date of birth",
+        value: "5 January 1978",
+        actions: [
+          { href: "#", text: "Change", visuallyHiddenText: "date of birth" },
+        ],
+      },
+      {
+        key: "Address",
+        value: (
+          <>
+            72 Guild Street
+            <br />
+            London
+            <br />
+            SE23 6FH
+          </>
+        ),
+        actions: [{ href: "#", text: "Change", visuallyHiddenText: "address" }],
+      },
+      {
+        key: "Contact details",
+        value: (
+          <>
+            07700 900457
+            <br />
+            sarah.phillips@example.com
+          </>
+        ),
+      },
+    ],
+  },
+};
+
+export const WithoutBorders: Story = {
+  args: {
+    noBorder: true,
+    rows: [
+      {
+        key: "Name",
+        value: "Sarah Philips",
+      },
+      {
+        key: "Date of birth",
+        value: "5 January 1978",
+      },
+      {
+        key: "Address",
+        value: (
+          <>
+            72 Guild Street
+            <br />
+            London
+            <br />
+            SE23 6FH
+          </>
+        ),
+      },
+      {
+        key: "Contact details",
+        value: (
+          <>
+            07700 900457
+            <br />
+            sarah.phillips@example.com
+          </>
+        ),
+      },
+    ],
+  },
+};
+
+export const WithMissingInformation: Story = {
+  args: {
+    rows: [
+      {
+        key: "Name",
+        value: "Sarah Philips",
+        actions: [{ href: "#", text: "Change", visuallyHiddenText: "name" }],
+      },
+      {
+        key: "Date of birth",
+        value: "5 January 1978",
+        actions: [
+          { href: "#", text: "Change", visuallyHiddenText: "date of birth" },
+        ],
+      },
+      {
+        key: "Address",
+        value: (
+          <>
+            72 Guild Street
+            <br />
+            London
+            <br />
+            SE23 6FH
+          </>
+        ),
+        actions: [{ href: "#", text: "Change", visuallyHiddenText: "address" }],
+      },
+      {
+        key: "Contact details",
+        value: <span className="govuk-hint">No contact details provided</span>,
+        actions: [
+          { href: "#", text: "Enter", visuallyHiddenText: "contact details" },
+        ],
+      },
+    ],
+  },
+};
+
+export const SummaryCard: Story = {
+  args: {
+    card: {
+      title: "Lead tenant",
+    },
+    rows: [
+      {
+        key: "Age",
+        value: "38",
+      },
+      {
+        key: "Nationality",
+        value: "UK national resident in UK",
+      },
+      {
+        key: "Working situation",
+        value: "Part time – Loss of hours",
+      },
+    ],
+  },
+};
+
+export const SummaryCardWithActions: Story = {
+  args: {
+    card: {
+      title: "Lead tenant",
+      actions: [
+        { href: "#", text: "Delete", visuallyHiddenText: "lead tenant" },
+        { href: "#", text: "Change", visuallyHiddenText: "lead tenant" },
+      ],
+    },
+    rows: [
+      {
+        key: "Age",
+        value: "38",
+      },
+      {
+        key: "Nationality",
+        value: "UK national resident in UK",
+      },
+      {
+        key: "Working situation",
+        value: "Part time – Loss of hours",
+      },
+    ],
+  },
+};

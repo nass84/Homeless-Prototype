@@ -1,1 +1,1 @@
-export { Details } from './Details.js'
+export { Details, type DetailsProps } from './Details.js'

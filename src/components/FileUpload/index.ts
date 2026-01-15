@@ -1,1 +1,1 @@
-export { FileUpload } from './FileUpload.js'
+export { FileUpload, type FileUploadProps } from './FileUpload.js'

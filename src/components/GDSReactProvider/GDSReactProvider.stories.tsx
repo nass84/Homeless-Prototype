@@ -1,5 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useEffect, useState } from "react";
+import { Accordion } from "../Accordion/Accordion.js";
+import { Button } from "../Button/Button.js";
+import { Heading } from "../Heading/Heading.js";
+import { InsetText } from "../InsetText/InsetText.js";
+import { Paragraph } from "../Paragraph/Paragraph.js";
+import { Radios } from "../Radios/Radios.js";
+import { TextInput } from "../TextInput/TextInput.js";
 import { GDSReactProvider, useGDSReact } from "./GDSReactProvider.js";
 
 const meta: Meta<typeof GDSReactProvider> = {
@@ -17,20 +24,11 @@ Wrap your application (or the GOV.UK-styled section) with this provider to:
 - Initialise JavaScript behaviours (accordions, character counts, etc.)
 - Provide configuration to child components via context
 
-## Setup
-
-1. Install govuk-frontend as a peer dependency
-2. Copy assets to your public folder
-3. Wrap your app with GDSReactProvider
         `,
       },
     },
   },
   argTypes: {
-    assetPath: {
-      control: "text",
-      description: "Path to GOV.UK Frontend assets",
-    },
     autoInit: {
       control: "boolean",
       description: "Whether to auto-initialise on mount",
@@ -43,16 +41,13 @@ type Story = StoryObj<typeof meta>;
 
 // Helper component to show initialisation status
 function InitStatus() {
-  const { isInitialised, assetPath } = useGDSReact();
+  const { isInitialised } = useGDSReact();
   return (
-    <div className="govuk-inset-text">
-      <p className="govuk-body">
+    <InsetText>
+      <Paragraph>
         <strong>Initialised:</strong> {isInitialised ? "Yes ✓" : "No"}
-      </p>
-      <p className="govuk-body">
-        <strong>Asset path:</strong> <code>{assetPath}</code>
-      </p>
-    </div>
+      </Paragraph>
+    </InsetText>
   );
 }
 
@@ -60,61 +55,29 @@ function InitStatus() {
 function GovUKDemo() {
   return (
     <div>
-      <h1 className="govuk-heading-xl">GOV.UK Frontend Demo</h1>
+      <Heading level={1} size="xl">
+        GOV.UK Frontend Demo
+      </Heading>
 
       <InitStatus />
 
-      <h2 className="govuk-heading-l">Example Components</h2>
+      <Heading level={2} size="l">
+        Example Components
+      </Heading>
 
-      <div className="govuk-form-group">
-        <label className="govuk-label" htmlFor="input-example">
-          Text input
-        </label>
-        <input
-          className="govuk-input"
-          id="input-example"
-          name="input-example"
-          type="text"
-        />
-      </div>
+      <TextInput id="input-example" name="input-example" label="Text input" />
 
-      <div className="govuk-form-group">
-        <fieldset className="govuk-fieldset">
-          <legend className="govuk-fieldset__legend">
-            Example radio buttons
-          </legend>
-          <div className="govuk-radios" data-module="govuk-radios">
-            <div className="govuk-radios__item">
-              <input
-                className="govuk-radios__input"
-                id="radio-1"
-                name="radio-group"
-                type="radio"
-                value="yes"
-              />
-              <label className="govuk-label govuk-radios__label" htmlFor="radio-1">
-                Yes
-              </label>
-            </div>
-            <div className="govuk-radios__item">
-              <input
-                className="govuk-radios__input"
-                id="radio-2"
-                name="radio-group"
-                type="radio"
-                value="no"
-              />
-              <label className="govuk-label govuk-radios__label" htmlFor="radio-2">
-                No
-              </label>
-            </div>
-          </div>
-        </fieldset>
-      </div>
+      <Radios
+        name="radio-group"
+        legend="Example radio buttons"
+        legendSize="s"
+        options={[
+          { label: "Yes", value: "yes" },
+          { label: "No", value: "no" },
+        ]}
+      />
 
-      <button type="submit" className="govuk-button" data-module="govuk-button">
-        Submit
-      </button>
+      <Button type="submit">Submit</Button>
     </div>
   );
 }
@@ -126,19 +89,6 @@ export const Default: Story = {
     </GDSReactProvider>
   ),
   args: {
-    assetPath: "/assets",
-    autoInit: true,
-  },
-};
-
-export const CustomAssetPath: Story = {
-  render: (args) => (
-    <GDSReactProvider {...args}>
-      <GovUKDemo />
-    </GDSReactProvider>
-  ),
-  args: {
-    assetPath: "/custom/govuk/assets",
     autoInit: true,
   },
 };
@@ -157,67 +107,43 @@ function DynamicContentDemo() {
 
   return (
     <div>
-      <h1 className="govuk-heading-xl">Dynamic Content Demo</h1>
+      <Heading level={1} size="xl">
+        Dynamic Content Demo
+      </Heading>
 
-      <p className="govuk-body">
-        Click the button to dynamically add a GOV.UK accordion.
-        The provider will reinitialise to enable its JavaScript behaviour.
-      </p>
+      <Paragraph>
+        Click the button to dynamically add a GOV.UK accordion. The provider
+        will reinitialise to enable its JavaScript behaviour.
+      </Paragraph>
 
-      <button
+      <Button
         type="button"
-        className="govuk-button govuk-button--secondary"
+        variant="secondary"
         onClick={() => setShowAccordion(!showAccordion)}
       >
         {showAccordion ? "Hide" : "Show"} Accordion
-      </button>
+      </Button>
 
       {showAccordion && (
-        <div
-          className="govuk-accordion"
-          data-module="govuk-accordion"
-          id="accordion-demo"
-          style={{ marginTop: "20px" }}
-        >
-          <div className="govuk-accordion__section">
-            <div className="govuk-accordion__section-header">
-              <h2 className="govuk-accordion__section-heading">
-                <span
-                  className="govuk-accordion__section-button"
-                  id="accordion-heading-1"
-                >
-                  Section 1
-                </span>
-              </h2>
-            </div>
-            <div
-              id="accordion-content-1"
-              className="govuk-accordion__section-content"
-            >
-              <p className="govuk-body">
-                This accordion was added dynamically and initialised via
-                reinitialise().
-              </p>
-            </div>
-          </div>
-          <div className="govuk-accordion__section">
-            <div className="govuk-accordion__section-header">
-              <h2 className="govuk-accordion__section-heading">
-                <span
-                  className="govuk-accordion__section-button"
-                  id="accordion-heading-2"
-                >
-                  Section 2
-                </span>
-              </h2>
-            </div>
-            <div
-              id="accordion-content-2"
-              className="govuk-accordion__section-content"
-            >
-              <p className="govuk-body">More content here.</p>
-            </div>
-          </div>
+        <div style={{ marginTop: "20px" }}>
+          <Accordion
+            id="accordion-demo"
+            sections={[
+              {
+                heading: "Section 1",
+                content: (
+                  <Paragraph>
+                    This accordion was added dynamically and initialised via
+                    reinitialise().
+                  </Paragraph>
+                ),
+              },
+              {
+                heading: "Section 2",
+                content: <Paragraph>More content here.</Paragraph>,
+              },
+            ]}
+          />
         </div>
       )}
     </div>
@@ -235,6 +161,67 @@ export const DynamicContent: Story = {
       description: {
         story:
           "Demonstrates using `reinitialise()` when adding GOV.UK components dynamically.",
+      },
+    },
+  },
+};
+
+
+function CustomRouterDemo() {
+  const example_code = `import { GDSReactProvider } from "@projectsbyif/gds-react";
+import Link from 'next/link'
+
+function App() {
+ return (
+   <GDSReactProvider linkComponent={({ href, children, ...props }) => (
+       <NextLink
+         href={href}
+         // Don't prefetch certain links (e.g. logout url)
+         prefetch={href?.includes('logout') ? false : undefined}
+         {...props}
+       >
+         {children}
+       </NextLink>
+     )}>
+     {/* All links from this library will now use the NextLink */}
+     <YourApplication />
+   </GDSReactProvider>
+ );
+}`
+
+  return (
+    <div>
+      <Heading level={1}>Custom Router Integration</Heading>
+
+      <Paragraph className="govuk-body">
+        Pass a custom link component (e.g. Next.js Link) to{" "}
+        <code>GDSReactProvider</code> via the <code>linkComponent</code> prop.
+        All Link components will use your custom router.
+      </Paragraph>
+
+
+      <code><pre>
+        {example_code}</pre>
+      </code>
+    </div>
+  );
+}
+
+export const CustomRouter: Story = {
+  render: () => (
+    <GDSReactProvider linkComponent={({ href, children, ...props }) => (
+       <a data-info={"Use your router component instead of an anchor"} {...props}>
+         {children}
+       </a>
+     )}>
+      <CustomRouterDemo />
+    </GDSReactProvider>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Demonstrates passing a custom link component (e.g. Next.js Link) to `GDSReactProvider`. All links within the provider will use the custom router. This example shows conditional prefetch control where logout links have prefetch disabled.",
       },
     },
   },

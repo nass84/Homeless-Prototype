@@ -1,12 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Accordion, type AccordionSection } from '../Accordion/Accordion.js'
+import { Accordion, type AccordionSection } from './Accordion.js'
 import { Paragraph } from '../Paragraph/Paragraph.js'
+import { Link } from '../Link/Link.js'
+import { List } from '../List/List.js'
 
 const meta: Meta<typeof Accordion> = {
-  title: 'GDS/Accordion',
+  title: "Components/Accordion",
   component: Accordion,
   parameters: {
     layout: 'padded',
+    docs: {
+      description: {
+        component: `The accordion component lets users show and hide sections of related content on a page.
+
+[Read more about how to use this component on the GOV.UK Design System](https://design-system.service.gov.uk/components/accordion/)`,
+      },
+    },
   },
   tags: ['autodocs'],
   argTypes: {
@@ -37,88 +46,103 @@ const meta: Meta<typeof Accordion> = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-const basicSections: AccordionSection[] = [
+const defaultSections: AccordionSection[] = [
   {
     heading: 'Writing well for the web',
-    summary: 'This is the summary for the Writing well for the web section',
-    content: (
-      <Paragraph>
-        This is the content for Writing well for the web. It contains detailed guidance on how to
-        write effective web content.
-      </Paragraph>
-    ),
+    content: <Paragraph>This is the content for Writing well for the web.</Paragraph>,
   },
   {
     heading: 'Writing well for specialists',
-    content: (
-      <Paragraph>
-        This is the content for Writing well for specialists. This section provides guidance
-        specifically tailored for specialist audiences.
-      </Paragraph>
-    ),
+    content: <Paragraph>This is the content for Writing well for specialists.</Paragraph>,
   },
   {
     heading: 'Know your audience',
-    summary: 'Understanding your users is key',
-    content: (
-      <Paragraph>
-        This is the content for Know your audience. Research shows that users scan pages rather than
-        reading them thoroughly.
-      </Paragraph>
-    ),
+    content: <Paragraph>This is the content for Know your audience.</Paragraph>,
+  },
+  {
+    heading: 'How people read',
+    content: <Paragraph>This is the content for How people read.</Paragraph>,
   },
 ]
 
 export const Default: Story = {
   args: {
-    id: 'default-accordion',
-    sections: basicSections,
+    id: 'accordion-default',
+    sections: defaultSections,
   },
 }
 
-export const WithExpanded: Story = {
-  args: {
-    id: 'expanded-accordion',
-    sections: [
-      {
-        ...(basicSections[0] as AccordionSection),
-        expanded: true,
-      },
-      ...basicSections.slice(1),
-    ],
+const sectionsWithSummary: AccordionSection[] = [
+  {
+    heading: 'Understanding agile project management',
+    summary: 'Introductions, methods, core features.',
+    content: (
+      <List
+        type="bullet"
+        items={[
+          <Link href="#">Agile and government services: an introduction</Link>,
+          <Link href="#">Agile methods: an introduction</Link>,
+          <Link href="#">Core principles of agile</Link>,
+        ]}
+      />
+    ),
   },
-}
-
-export const HeadingLevel3: Story = {
-  args: {
-    id: 'h3-accordion',
-    sections: basicSections,
-    headingLevel: 3,
+  {
+    heading: 'Working with agile methods',
+    summary: 'Workspaces, tools and techniques, user stories, planning.',
+    content: (
+      <List
+        type="bullet"
+        items={[
+          <Link href="#">Creating an agile working environment</Link>,
+          <Link href="#">Agile tools and techniques</Link>,
+          <Link href="#">Set up a team wall</Link>,
+          <Link href="#">Writing user stories</Link>,
+          <Link href="#">Planning in agile</Link>,
+          <Link href="#">Deciding on priorities</Link>,
+          <Link href="#">Developing a roadmap</Link>,
+        ]}
+      />
+    ),
   },
-}
-
-export const NoRememberExpanded: Story = {
-  args: {
-    id: 'no-remember-accordion',
-    sections: basicSections,
-    rememberExpanded: false,
+  {
+    heading: 'Governing agile services',
+    summary: 'Principles, measuring progress, spending money.',
+    content: (
+      <List
+        type="bullet"
+        items={[
+          <Link href="#">Governance principles for agile service delivery</Link>,
+          <Link href="#">Measuring and reporting progress</Link>,
+          <Link href="#">Spend controls: check if you need approval to spend money on a service</Link>,
+          <Link href="#">Spend controls: apply for approval to spend money on a service</Link>,
+          <Link href="#">Spend controls: the approvals process</Link>,
+          <Link href="#">Working across organisational boundaries</Link>,
+        ]}
+      />
+    ),
   },
-}
+  {
+    heading: 'Phases of an agile project',
+    summary: 'Discovery, alpha, beta, live and retirement.',
+    content: (
+      <List
+        type="bullet"
+        items={[
+          <Link href="#">How the discovery phase works</Link>,
+          <Link href="#">How the alpha phase works</Link>,
+          <Link href="#">How the beta phase works</Link>,
+          <Link href="#">How the live phase works</Link>,
+          <Link href="#">Retiring your service</Link>,
+        ]}
+      />
+    ),
+  },
+]
 
-export const SingleSection: Story = {
+export const WithSummary: Story = {
   args: {
-    id: 'single-accordion',
-    sections: [
-      {
-        heading: 'Important information',
-        summary: 'Read this carefully',
-        content: (
-          <Paragraph>
-            This accordion has only one section. This might be useful for highlighting a single
-            piece of important information.
-          </Paragraph>
-        ),
-      },
-    ],
+    id: 'accordion-with-summary',
+    sections: sectionsWithSummary,
   },
 }

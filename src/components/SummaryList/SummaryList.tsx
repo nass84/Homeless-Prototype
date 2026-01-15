@@ -1,5 +1,3 @@
-'use client'
-
 import type { ReactNode } from 'react'
 import { Link } from '../Link/Link.js'
 
@@ -53,7 +51,7 @@ export function SummaryList({ rows, noBorder = false, card, className = '' }: Su
             {hasActions && (
               <dd className="govuk-summary-list__actions">
                 {row.actions && row.actions.length === 1 && row.actions[0] ? (
-                  <a className="govuk-link" href={row.actions[0].href}>
+                  <Link className="govuk-link" href={row.actions[0].href}>
                     {row.actions[0].text}
                     {row.actions[0].visuallyHiddenText && (
                       <span className="govuk-visually-hidden">
@@ -61,7 +59,7 @@ export function SummaryList({ rows, noBorder = false, card, className = '' }: Su
                         {row.actions[0].visuallyHiddenText}
                       </span>
                     )}
-                  </a>
+                  </Link>
                 ) : (
                   <ul className="govuk-summary-list__actions-list">
                     {row.actions?.map((action, actionIndex) => (

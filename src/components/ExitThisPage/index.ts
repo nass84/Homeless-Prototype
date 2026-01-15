@@ -1,1 +1,1 @@
-export { ExitThisPage } from './ExitThisPage.js'
+export { ExitThisPage, type ExitThisPageProps } from './ExitThisPage.js'

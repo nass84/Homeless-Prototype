@@ -50,11 +50,11 @@ export function useGDSReact(): GDSReactConfig {
  * @example
  * ```tsx
  * // In your app's root:
- * import { GDSReactProvider } from "@your-scope/your-library";
+ * import { GDSReactProvider } from "@projectsbyif/gds-react";
  *
  * function App() {
  *   return (
- *     <GDSReactProvider assetPath="/assets">
+ *     <GDSReactProvider>
  *       <YourApplication />
  *     </GDSReactProvider>
  *   );
@@ -62,16 +62,16 @@ export function useGDSReact(): GDSReactConfig {
  * ```
  *
  * @remarks
- * You must copy GOV.UK Frontend assets to your application:
+ * You must copy GOV.UK Frontend assets to your application for fonts and images to:
  * ```bash
  * cp -r node_modules/govuk-frontend/dist/govuk/assets ./public/assets
  * ```
  */
 export function GDSReactProvider({
   children,
-  assetPath = "/assets",
   autoInit = true,
   scope,
+  linkComponent,
 }: GDSReactProviderProps): ReactNode {
   const [isInitialised, setIsInitialised] = useState(false);
   const initRef = useRef(false);
@@ -112,17 +112,10 @@ export function GDSReactProvider({
     }
   }, [autoInit, initialise, scope]);
 
-  // Set CSS custom property for asset path (useful for custom styling)
-  useEffect(() => {
-    if (typeof document === "undefined") return;
-
-    document.documentElement.style.setProperty("--gds-asset-path", assetPath);
-  }, [assetPath]);
-
   const contextValue: GDSReactConfig = {
-    assetPath,
     isInitialised,
     reinitialise,
+    linkComponent,
   };
 
   return (

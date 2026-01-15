@@ -1,1 +1,1 @@
-export { List } from './List.js'
+export { List, type ListProps } from './List.js'

@@ -1,16 +1,12 @@
-'use client'
-
 import { useEffect, useRef } from 'react'
+import { Link } from '../Link/Link.js'
 
-export interface ErrorSummaryError {
+interface ErrorSummaryError {
   target: string
   message: string
 }
 
-// Legacy export for backwards compatibility
-export type ErrorMessage = ErrorSummaryError
-
-interface ErrorSummaryProps {
+export interface ErrorSummaryProps {
   title?: string
   errors: ErrorSummaryError[]
   hideOnEmpty?: boolean
@@ -18,7 +14,7 @@ interface ErrorSummaryProps {
 
 export const ErrorSummary = ({
   errors,
-  title = 'There is a problem', // TODO translations
+  title = 'There is a problem',
   hideOnEmpty = true,
 }: ErrorSummaryProps) => {
   const summaryRef = useRef<HTMLDivElement>(null)
@@ -54,7 +50,7 @@ export const ErrorSummary = ({
             {errors.map(({ target, message }) => {
               return (
                 <li key={`error-list-item-${target}`}>
-                  <a href={`#${target}`}>{message}</a>
+                  <Link href={`#${target}`}>{message}</Link>
                 </li>
               )
             })}

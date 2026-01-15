@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Link } from '../Link/Link.js'
 
 export interface ServiceNavigationItem {
   text: string
@@ -51,9 +52,9 @@ export function ServiceNavigation({
         <div className="govuk-service-navigation__container">
           {hasServiceName && (
             <span className="govuk-service-navigation__service-name">
-              <a href={serviceUrl} className="govuk-service-navigation__link">
+              <Link href={serviceUrl} className="govuk-service-navigation__link">
                 {serviceName}
-              </a>
+              </Link>
             </span>
           )}
 

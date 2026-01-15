@@ -1,65 +1,62 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { PhaseBanner } from './PhaseBanner.js'
-import { Link } from '../Link/Link.js'
+import type { Meta, StoryObj } from "@storybook/react";
+import { PhaseBanner } from "./PhaseBanner.js";
+import { Link } from "../Link/Link.js";
 
 const meta: Meta<typeof PhaseBanner> = {
-  title: 'GDS/PhaseBanner',
+  title: "Components/Phase banner",
   component: PhaseBanner,
   parameters: {
-    layout: 'padded',
+    layout: "padded",
+    docs: {
+      description: {
+        component: `Use the phase banner component to show users your service is still being worked on.
+
+[Read more about how to use this component on the GOV.UK Design System](https://design-system.service.gov.uk/components/phase-banner/)`,
+      },
+    },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     tag: {
-      control: 'text',
-      description: 'Phase tag text (alpha, beta, or custom)',
+      control: "text",
+      description: "The phase tag text (e.g. 'alpha', 'beta')",
     },
     children: {
-      control: false,
-      description: 'Content of the phase banner',
+      description: "The banner content",
     },
     className: {
-      control: 'text',
-      description: 'Additional CSS classes',
+      control: "text",
+      description: "Additional CSS classes",
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Alpha: Story = {
   args: {
-    tag: 'alpha',
+    tag: "alpha",
     children: (
       <>
-        This is a new service – your <Link href="/feedback">feedback</Link> will help us to improve
-        it.
+        This is a new service. Help us improve it and{" "}
+        <Link href="mailto:feedback@example.com">give your feedback by email</Link>.
       </>
     ),
   },
-}
+};
 
 export const Beta: Story = {
   args: {
-    tag: 'beta',
+    tag: "beta",
     children: (
       <>
-        This is a new service – your <Link href="/feedback">feedback</Link> will help us to improve
-        it.
+        This is a new service – your{" "}
+        <Link href="#" target="_blank">
+          feedback (opens in new tab)
+        </Link>{" "}
+        will help us to improve it.
       </>
     ),
   },
-}
-
-export const CustomPhase: Story = {
-  args: {
-    tag: 'pilot',
-    children: (
-      <>
-        This service is currently being piloted with selected users.
-        <Link href="/about-pilot">Learn more about the pilot</Link>.
-      </>
-    ),
-  },
-}
+};

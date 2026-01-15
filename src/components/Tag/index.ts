@@ -1,1 +1,1 @@
-export { Tag, type TagColour } from './Tag.js'
+export { Tag, type TagColour, type TagProps } from './Tag.js'

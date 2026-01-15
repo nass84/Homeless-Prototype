@@ -1,6 +1,5 @@
-'use client'
-
 import type { ReactNode } from 'react'
+import { Link } from '../Link/Link.js'
 
 export interface BackLinkProps {
   href?: string
@@ -14,24 +13,24 @@ export function BackLink({
   href,
   children = 'Back',
   inverse = false,
-  onClick,
+  onClick = () => {},
   className = '',
 }: BackLinkProps) {
   const inverseClass = inverse ? ' govuk-back-link--inverse' : ''
   const linkClass = `govuk-back-link${inverseClass}${className ? ` ${className}` : ''}`
 
-  // If href is provided, use Next.js Link
+  // If href is provided, use it
   if (href) {
     return (
-      <a href={href} className={linkClass} onClick={onClick}>
+      <Link href={href} className={linkClass} onClick={onClick}>
         {children}
-      </a>
+      </Link>
     )
   }
 
-  // Otherwise render as anchor with onClick handler
+  // Otherwise render as Link with onClick handler
   return (
-    <a
+    <Link
       href="#"
       className={linkClass}
       onClick={(e) => {
@@ -40,6 +39,6 @@ export function BackLink({
       }}
     >
       {children}
-    </a>
+    </Link>
   )
 }

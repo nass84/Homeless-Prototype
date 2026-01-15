@@ -1,135 +1,91 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { Fieldset } from './Fieldset.js'
-import { Radios } from '../Radios/Radios.js'
-import { CheckboxGroup } from '../CheckboxGroup/CheckboxGroup.js'
-import { Paragraph } from '../Paragraph/Paragraph.js'
+import type { Meta, StoryObj } from "@storybook/react";
+import { Fieldset } from "./Fieldset.js";
+import { TextInput } from "../TextInput/TextInput.js";
 
 const meta: Meta<typeof Fieldset> = {
-  title: 'GDS/Fieldset',
+  title: "Components/Fieldset",
   component: Fieldset,
   parameters: {
-    layout: 'padded',
+    layout: "padded",
+    docs: {
+      description: {
+        component: `Use the fieldset component to group related form inputs.
+
+[Read more about how to use this component on the GOV.UK Design System](https://design-system.service.gov.uk/components/fieldset/)`,
+      },
+    },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     legend: {
-      control: 'text',
-      description: 'Legend text or JSX element',
+      control: "text",
+      description: "The legend text for the fieldset",
     },
     legendAsHeading: {
-      control: 'boolean',
-      description: 'Whether legend should be rendered as a heading',
+      control: "boolean",
+      description: "Whether to render the legend as a page heading",
     },
     legendSize: {
-      control: 'radio',
-      options: ['xl', 'l', 'm', 's'],
-      description: 'Size of the legend text',
+      control: "radio",
+      options: ["xl", "l", "m", "s"],
+      description: "Size of the legend",
     },
     children: {
-      control: false,
-      description: 'Child content to display within fieldset',
+      description: "The form inputs to group",
     },
     ariaDescribedBy: {
-      control: 'text',
-      description: 'IDs of elements that describe this fieldset',
+      control: "text",
+      description: "ID of element that describes the fieldset",
     },
     role: {
-      control: 'text',
-      description: 'ARIA role attribute',
+      control: "text",
+      description: "ARIA role attribute",
     },
     className: {
-      control: 'text',
-      description: 'Additional CSS classes',
+      control: "text",
+      description: "Additional CSS classes",
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    legend: 'What is your address?',
-    children: (
-      <div>
-        <Paragraph>This fieldset groups related form fields together.</Paragraph>
-      </div>
-    ),
-  },
-}
-
-export const AsHeading: Story = {
-  args: {
-    legend: 'Personal details',
+    legend: "What is your address?",
     legendAsHeading: true,
-    legendSize: 'xl',
     children: (
-      <div>
-        <Paragraph>Please provide your personal information below.</Paragraph>
-      </div>
+      <>
+        <TextInput
+          id="address-line-1"
+          name="addressLine1"
+          label="Address line 1"
+          width="two-thirds"
+          autocomplete="address-line1"
+        />
+        <TextInput
+          id="address-line-2"
+          name="addressLine2"
+          label="Address line 2 (optional)"
+          width="two-thirds"
+          autocomplete="address-line2"
+        />
+        <TextInput
+          id="address-town"
+          name="addressTown"
+          label="Town or city"
+          width="one-third"
+          autocomplete="address-level2"
+        />
+        <TextInput
+          id="address-postcode"
+          name="addressPostcode"
+          label="Postcode"
+          width="one-quarter"
+          autocomplete="postal-code"
+        />
+      </>
     ),
   },
-}
-
-export const WithRadios: Story = {
-  args: {
-    legend: 'Where do you live?',
-    legendSize: 'l',
-    children: (
-      <Radios
-        name="address"
-        options={[
-          { label: 'England', value: 'england' },
-          { label: 'Scotland', value: 'scotland' },
-          { label: 'Wales', value: 'wales' },
-          { label: 'Northern Ireland', value: 'northern-ireland' },
-        ]}
-        legend={undefined}
-      />
-    ),
-  },
-}
-
-export const WithCheckboxes: Story = {
-  args: {
-    legend: 'Which types of waste do you transport?',
-    children: (
-      <CheckboxGroup
-        name="waste-types"
-        legend=""
-        options={[
-          { label: 'Waste from animal carcasses', value: 'animal' },
-          { label: 'Waste from mines or quarries', value: 'mining' },
-          { label: 'Farm or agricultural waste', value: 'farm' },
-          { label: 'None of these', value: 'none', exclusive: true },
-        ]}
-      />
-    ),
-  },
-}
-
-export const SmallLegend: Story = {
-  args: {
-    legend: 'Additional information',
-    legendSize: 's',
-    children: <Paragraph>This is a fieldset with a small legend.</Paragraph>,
-  },
-}
-
-export const MediumLegend: Story = {
-  args: {
-    legend: 'Contact preferences',
-    legendSize: 'm',
-    children: (
-      <CheckboxGroup
-        name="contact"
-        legend=""
-        options={[
-          { label: 'Email', value: 'email' },
-          { label: 'Phone', value: 'phone' },
-          { label: 'Post', value: 'post' },
-        ]}
-      />
-    ),
-  },
-}
+};

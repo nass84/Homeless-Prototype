@@ -1,5 +1,3 @@
-'use client'
-
 import { Tag, type TagColour } from '../Tag/Tag.js'
 
 export interface TaskListStatus {

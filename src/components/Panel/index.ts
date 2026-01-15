@@ -1,1 +1,1 @@
-export { Panel } from './Panel.js'
+export { Panel, type PanelProps } from './Panel.js'

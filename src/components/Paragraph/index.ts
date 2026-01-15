@@ -1,1 +1,1 @@
-export { Paragraph } from './Paragraph.js'
+export { Paragraph, type ParagraphProps } from './Paragraph.js'

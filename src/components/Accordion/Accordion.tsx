@@ -1,5 +1,3 @@
-'use client'
-
 import type { ReactNode, JSX } from 'react'
 
 export interface AccordionSection {

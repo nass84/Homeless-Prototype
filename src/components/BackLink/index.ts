@@ -1,1 +1,1 @@
-export { BackLink } from './BackLink.js'
+export { BackLink, type BackLinkProps } from './BackLink.js'

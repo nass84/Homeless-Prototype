@@ -1,6 +1,5 @@
-'use client'
-
 import type { ReactNode, JSX } from 'react'
+import { Link } from '../Link/Link.js'
 
 export interface CookieBannerAction {
   text: string
@@ -69,9 +68,9 @@ export function CookieBanner({
                 {message.actions.map((action, actionIndex) => {
                   if (action.type === 'link') {
                     return (
-                      <a key={actionIndex} className="govuk-link" href={action.href || '#'}>
+                      <Link key={actionIndex} className="govuk-link" href={action.href || '#'}>
                         {action.text}
-                      </a>
+                      </Link>
                     )
                   }
 

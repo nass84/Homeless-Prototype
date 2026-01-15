@@ -1,1 +1,1 @@
-export { SkipLink } from './SkipLink.js'
+export { SkipLink, type SkipLinkProps } from './SkipLink.js'

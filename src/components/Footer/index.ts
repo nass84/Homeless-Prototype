@@ -1,1 +1,1 @@
-export { Footer } from './Footer.js'
+export { Footer, type FooterProps } from './Footer.js'

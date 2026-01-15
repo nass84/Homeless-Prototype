@@ -1,17 +1,15 @@
-'use client'
-
-import type { ReactNode } from 'react'
+import type { ReactNode } from "react";
 
 export interface FileUploadProps {
-  id: string
-  name: string
-  label: string | ReactNode
-  hint?: string
-  error?: string
-  accept?: string
-  multiple?: boolean
-  onChange?: (files: FileList | null) => void
-  className?: string
+  id: string;
+  name: string;
+  label: string | ReactNode;
+  hint?: string;
+  error?: string;
+  accept?: string;
+  multiple?: boolean;
+  onChange?: (files: FileList | null) => void;
+  className?: string;
 }
 
 export function FileUpload({
@@ -23,17 +21,22 @@ export function FileUpload({
   accept,
   multiple = false,
   onChange,
-  className = '',
+  className = "",
 }: FileUploadProps) {
-  const hintId = hint ? `${id}-hint` : undefined
-  const errorId = error ? `${id}-error` : undefined
+  const hintId = hint ? `${id}-hint` : undefined;
+  const errorId = error ? `${id}-error` : undefined;
 
   // Build aria-describedby string
-  const ariaDescribedBy = [hintId, errorId].filter(Boolean).join(' ') || undefined
+  const ariaDescribedBy =
+    [hintId, errorId].filter(Boolean).join(" ") || undefined;
 
   // Build class names
-  const formGroupClass = `govuk-form-group${error ? ' govuk-form-group--error' : ''}`
-  const inputClass = `govuk-file-upload${error ? ' govuk-file-upload--error' : ''}${className ? ` ${className}` : ''}`
+  const formGroupClass = `govuk-form-group${
+    error ? " govuk-form-group--error" : ""
+  }`;
+  const inputClass = `govuk-file-upload${
+    error ? " govuk-file-upload--error" : ""
+  }${className ? ` ${className}` : ""}`;
 
   return (
     <div className={formGroupClass}>
@@ -52,17 +55,18 @@ export function FileUpload({
           <span className="govuk-visually-hidden">Error:</span> {error}
         </p>
       )}
-
-      <input
-        className={inputClass}
-        id={id}
-        name={name}
-        type="file"
-        accept={accept}
-        multiple={multiple}
-        aria-describedby={ariaDescribedBy}
-        onChange={(e) => onChange?.(e.target.files)}
-      />
+      <div className="govuk-drop-zone" data-module="govuk-file-upload">
+        <input
+          className={inputClass}
+          id={id}
+          name={name}
+          type="file"
+          accept={accept}
+          multiple={multiple}
+          aria-describedby={ariaDescribedBy}
+          onChange={(e) => onChange?.(e.target.files)}
+        />
+      </div>
     </div>
-  )
+  );
 }

@@ -9,11 +9,10 @@ vi.mock("govuk-frontend", () => ({
 
 // Test component that uses the hook
 function TestConsumer() {
-  const { isInitialised, assetPath } = useGDSReact();
+  const { isInitialised } = useGDSReact();
   return (
     <div>
       <span data-testid="initialised">{isInitialised.toString()}</span>
-      <span data-testid="asset-path">{assetPath}</span>
     </div>
   );
 }
@@ -33,25 +32,6 @@ describe("GDSReactProvider", () => {
     expect(screen.getByText("Test content")).toBeInTheDocument();
   });
 
-  it("provides default asset path", () => {
-    render(
-      <GDSReactProvider>
-        <TestConsumer />
-      </GDSReactProvider>
-    );
-
-    expect(screen.getByTestId("asset-path")).toHaveTextContent("/assets");
-  });
-
-  it("allows custom asset path", () => {
-    render(
-      <GDSReactProvider assetPath="/custom/assets">
-        <TestConsumer />
-      </GDSReactProvider>
-    );
-
-    expect(screen.getByTestId("asset-path")).toHaveTextContent("/custom/assets");
-  });
 
   it("initialises GOV.UK Frontend when autoInit is true", async () => {
     const { initAll } = await import("govuk-frontend");
@@ -81,19 +61,6 @@ describe("GDSReactProvider", () => {
 
     expect(initAll).not.toHaveBeenCalled();
   });
-
-  it("sets CSS custom property for asset path", () => {
-    render(
-      <GDSReactProvider assetPath="/my/assets">
-        <div>Content</div>
-      </GDSReactProvider>
-    );
-
-    expect(
-      document.documentElement.style.getPropertyValue("--gds-asset-path")
-    ).toBe("/my/assets");
-  });
-});
 
 describe("useGDSReact", () => {
   it("throws when used outside provider", () => {

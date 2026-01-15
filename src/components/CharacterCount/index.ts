@@ -1,1 +1,1 @@
-export { CharacterCount } from './CharacterCount.js'
+export { CharacterCount, type CharacterCountProps } from './CharacterCount.js'
