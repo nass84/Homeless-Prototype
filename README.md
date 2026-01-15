@@ -29,7 +29,7 @@ import { GDSReactProvider } from "@projectsbyif/gds-react";
 
 function App() {
   return (
-    <GDSReactProvider assets="/assets">
+    <GDSReactProvider>
       <YourApplication />
     </GDSReactProvider>
   );
