@@ -48,7 +48,7 @@ Components load GOV.UK Frontend styles and JavaScript automatically. For styling
 
 If you are approved to use GOV.UK assets, follow [this guide](https://frontend.design-system.service.gov.uk/import-font-and-images-assets/) to set up font and image assets.
 
-## Router Integration
+## Router integration
 
 Use the `asChild` prop on Link components to integrate with your router (Next.js, React Router, TanStack Router, etc.):
 
@@ -74,7 +74,7 @@ import { Link as RouterLink } from "react-router-dom";
 </Link>
 ```
 
-### Multi-link Components
+### Multi-link components
 
 For components with multiple links (Breadcrumbs, Footer, etc.), use the `renderLink` prop:
 
