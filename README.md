@@ -97,11 +97,16 @@ import NextLink from "next/link";
 
 See the [Router Integration guide](https://projectsbyif.github.io/gds-react/?path=/docs/guides-router-integration--docs) for more examples with different frameworks.
 
-## GDS Transport Font Usage
+## GDS Transport font usage
 
 The GDS Transport font is only licensed for use on gov.uk subdomains. If you're not building for gov.uk, the library will fall back to Arial.
 
 [Read more about GDS Transport usage](https://design-system.service.gov.uk/styles/typeface/)
+
+## About Projects by IF
+
+This project is led by Projects by IF, a design and strategy studio specialising in the responsible application of emerging technology. See more of our work at [projectsbyif.com](https://projectsbyif.com/)
+
 
 ## License
 

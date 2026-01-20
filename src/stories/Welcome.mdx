@@ -2,19 +2,19 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 <Meta title="Guides/Welcome - Read me first" />
 
-# GDSReact
+# gds-react
 
 This component library provides everything you need to use the [GOV.UK Design System](https://design-system.service.gov.uk/) in your React projects.
 
 **Read this guide first for setup instructions and troubleshooting.**
 
-## Important Notice
+## Important notice
 
-### No Government Affiliation
+### No government affiliation
 
 This library is NOT maintained, endorsed, or supported by the UK Government. It is a community implementation of the designs and patterns created by the GOV.UK Design System team. While every care has been taken to remain faithful to the original design intentions, slight deviations may occur.
 
-### GDS Transport Font
+### GDS Transport font
 
 The [GDS Transport](https://designnotes.blog.gov.uk/2015/03/11/can-i-use-the-gov-uk-fonts/) font is **only licensed for use on gov.uk subdomains**. If you're not building for gov.uk, the library will fall back to Arial.
 
@@ -22,7 +22,7 @@ For more information, see:
 - [GDS Transport usage guidelines](https://design-system.service.gov.uk/styles/typeface/)
 - [Making your service look like GOV.UK](https://www.gov.uk/service-manual/design/making-your-service-look-like-govuk#if-your-service-isnt-on-govuk)
 
-## Getting Started
+## Getting started
 
 ### Requirements
 
@@ -43,7 +43,7 @@ For more information, see:
    ```
 
 3. **Set up assets (if building for gov.uk):**
-   Follow the [guide to import font and image assets](https://frontend.design-system.service.gov.uk/import-font-and-images-assets/). Note the path you use (we recommend `/assets`).
+   Follow the [guide to import font and image assets](https://frontend.design-system.service.gov.uk/import-font-and-images-assets/). Assets _must_ be served from `<YOUR_SITE_URL>/assets`.
 
 ## Usage
 
@@ -67,7 +67,7 @@ Components load GOV.UK Frontend styles and JavaScript automatically. For styling
 - `js-enabled` on `<body>` - Required for JS-dependent components (Accordion, Tabs, etc.)
 - `govuk-frontend-supported` on `<body>` - Indicates modern JavaScript support
 
-### Router Integration
+### Router integration
 
 Most React frameworks use a router for navigation, such as [Next.js Link](https://nextjs.org/docs/app/api-reference/components/link) or [React Router](https://reactrouter.com/).
 
@@ -121,3 +121,7 @@ See [Router Integration](?path=/docs/guides-router-integration--docs) for more e
 - Use the `asChild` prop with your router's Link component
 - For multi-link components, use the appropriate `renderLink` prop
 - See [Router Integration](?path=/docs/guides-router-integration--docs) for examples
+
+## About Projects by IF
+
+This project is led by Projects by IF, a design and strategy studio specialising in the responsible application of emerging technology. See more of our work at [projectsbyif.com](https://projectsbyif.com/)
