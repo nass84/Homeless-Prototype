@@ -41,7 +41,7 @@ export function PageTemplate({
   children,
   footer,
 }: PageTemplateProps) {
-  const hasNavigation = navigationItems && navigationItems.length > 0
+  const hasServiceName = Boolean(serviceName)
 
   return (
     <>
@@ -55,17 +55,13 @@ export function PageTemplate({
 
       <SkipLink />
 
-      {hasNavigation ? (
-        <>
-          <Header fullWidthBorder />
-          <ServiceNavigation
-            serviceName={serviceName}
-            serviceUrl={serviceUrl}
-            navigationItems={navigationItems}
-          />
-        </>
-      ) : (
-        <Header productName={serviceName} />
+      <Header fullWidthBorder={hasServiceName} />
+      {hasServiceName && (
+        <ServiceNavigation
+          serviceName={serviceName}
+          serviceUrl={serviceUrl}
+          navigationItems={navigationItems ?? []}
+        />
       )}
 
       <div className="govuk-width-container">

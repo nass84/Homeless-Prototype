@@ -1,7 +1,6 @@
-"use client";
+import { type ReactNode, useEffect } from "react";
 
-import { type ReactNode, useEffect, useState } from "react";
-
+import '../../styles/core.scss'
 import "govuk-frontend/dist/govuk/components/tabs/_tabs.scss";
 
 export interface Tab {
@@ -33,40 +32,8 @@ export function Tabs({
     initialise();
   }, []);
 
-  const [selectedTabId, setSelectedTabId] = useState<string>(
-    defaultTabId || tabs[0]?.id || ""
-  );
-
-  // Update selected tab based on URL hash on mount and when hash changes
-  useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.slice(1); // Remove the #
-      if (hash && tabs.some((tab) => tab.id === hash)) {
-        setSelectedTabId(hash);
-      }
-    };
-
-    // Check hash on mount
-    handleHashChange();
-
-    // Listen for hash changes
-    window.addEventListener("hashchange", handleHashChange);
-
-    return () => {
-      window.removeEventListener("hashchange", handleHashChange);
-    };
-  }, [tabs]);
-
-  const handleTabClick = (
-    tabId: string,
-    event: React.MouseEvent<HTMLAnchorElement>
-  ) => {
-    event.preventDefault();
-    setSelectedTabId(tabId);
-
-    // Update URL hash
-    window.history.pushState(null, "", `#${tabId}`);
-  };
+  // Determine initial selected tab for SSR rendering
+  const selectedId = defaultTabId || tabs[0]?.id || "";
 
   const tabsClass = `govuk-tabs${className ? ` ${className}` : ""}`;
 
@@ -74,51 +41,32 @@ export function Tabs({
     <div className={tabsClass} data-module="govuk-tabs">
       <h2 className="govuk-tabs__title">{title}</h2>
 
-      <ul className="govuk-tabs__list" role="tablist">
-        {tabs.map((tab) => {
-          const isSelected = tab.id === selectedTabId;
-
-          return (
-            <li
-              key={tab.id}
-              className={`govuk-tabs__list-item${
-                isSelected ? " govuk-tabs__list-item--selected" : ""
-              }`}
-              role="presentation"
-            >
-              <a
-                className="govuk-tabs__tab"
-                href={`#${tab.id}`}
-                role="tab"
-                aria-controls={tab.id}
-                aria-selected={isSelected}
-                tabIndex={isSelected ? 0 : -1}
-                onClick={(e) => handleTabClick(tab.id, e)}
-              >
-                {tab.label}
-              </a>
-            </li>
-          );
-        })}
+      <ul className="govuk-tabs__list">
+        {tabs.map((tab) => (
+          <li
+            key={tab.id}
+            className={`govuk-tabs__list-item${
+              tab.id === selectedId ? " govuk-tabs__list-item--selected" : ""
+            }`}
+          >
+            <a className="govuk-tabs__tab" href={`#${tab.id}`}>
+              {tab.label}
+            </a>
+          </li>
+        ))}
       </ul>
 
-      {tabs.map((tab) => {
-        const isSelected = tab.id === selectedTabId;
-
-        return (
-          <div
-            key={`panel-${tab.id}`}
-            className={`govuk-tabs__panel${
-              !isSelected ? " govuk-tabs__panel--hidden" : ""
-            }`}
-            id={tab.id}
-            role="tabpanel"
-            aria-labelledby={`tab_${tab.id}`}
-          >
-            {tab.content}
-          </div>
-        );
-      })}
+      {tabs.map((tab) => (
+        <div
+          key={`panel-${tab.id}`}
+          className={`govuk-tabs__panel${
+            tab.id !== selectedId ? " govuk-tabs__panel--hidden" : ""
+          }`}
+          id={tab.id}
+        >
+          {tab.content}
+        </div>
+      ))}
     </div>
   );
 }

@@ -15,6 +15,10 @@ export interface HeaderProps {
   children?: ReactNode;
 }
 
+/**
+ * @deprecated The Header component is deprecated. Use ServiceNavigation with the header prop instead.
+ * @see https://design-system.service.gov.uk/components/service-navigation/
+ */
 export function Header({
   productName = "",
   homepageUrl = "/",
@@ -30,6 +34,9 @@ export function Header({
   };
 
   useEffect(() => {
+    console.warn(
+      "[gds-react] Header is deprecated. Use ServiceNavigation with the header prop instead. See: https://design-system.service.gov.uk/components/service-navigation/"
+    );
     initialise();
   }, []);
 

@@ -15,6 +15,7 @@ const preview: Preview = {
             ["Welcome - Read me first", "Router Integration"],
           "Core",
           "Page Structure",
+          "Typography",
           "Components",
           "*",
         ],

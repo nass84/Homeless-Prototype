@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 
+import '../../styles/objects.scss'
 import "govuk-frontend/dist/govuk/components/file-upload/_file-upload.scss";
 
 export interface FileUploadProps {

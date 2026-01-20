@@ -1,5 +1,6 @@
 import { type ReactNode, type JSX, useEffect } from "react";
 
+import '../../styles/core.scss'
 import "govuk-frontend/dist/govuk/components/accordion/_accordion.scss";
 
 export interface AccordionSection {

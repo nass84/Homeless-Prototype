@@ -1,5 +1,7 @@
-import "govuk-frontend/dist/govuk/components/exit-this-page/_exit-this-page.scss";
 import { useEffect } from "react";
+
+import '../../styles/core.scss'
+import "govuk-frontend/dist/govuk/components/exit-this-page/_exit-this-page.scss";
 
 export interface ExitThisPageProps {
   href?: string;

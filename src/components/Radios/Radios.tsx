@@ -1,7 +1,6 @@
-"use client";
+import { Fragment, type ReactNode, useEffect } from "react";
 
-import { Fragment, type ReactNode, useEffect, useState } from "react";
-
+import '../../styles/core.scss'
 import "govuk-frontend/dist/govuk/components/radios/_radios.scss";
 
 export interface RadioOption {
@@ -24,7 +23,6 @@ export interface RadiosProps {
   inline?: boolean;
   small?: boolean;
   onChange?: (value: string) => void;
-  value?: string;
   defaultValue?: string;
 }
 
@@ -38,7 +36,6 @@ export function Radios({
   inline = false,
   small = false,
   onChange,
-  value,
   defaultValue,
 }: RadiosProps) {
   const initialise = async () => {
@@ -50,14 +47,7 @@ export function Radios({
   useEffect(() => {
     initialise();
   }, []);
-  
-  const [internalValue, setInternalValue] = useState<string | undefined>(
-    defaultValue
-  );
 
-  // Determine if controlled or uncontrolled
-  const isControlled = value !== undefined;
-  const currentValue = isControlled ? value : internalValue;
   const hintId = hint ? `${name}-hint` : undefined;
   const errorId = error ? `${name}-error` : undefined;
 
@@ -125,15 +115,12 @@ export function Radios({
                     name={name}
                     type="radio"
                     value={option.value}
-                    checked={currentValue === option.value}
+                    defaultChecked={defaultValue === option.value}
                     disabled={option.disabled}
                     aria-describedby={itemAriaDescribedBy}
                     data-aria-controls={conditionalId}
                     onChange={(e) => {
                       if (e.target.checked) {
-                        if (!isControlled) {
-                          setInternalValue(option.value);
-                        }
                         onChange?.(option.value);
                       }
                     }}
@@ -157,11 +144,7 @@ export function Radios({
 
                 {option.conditionalContent && (
                   <div
-                    className={`govuk-radios__conditional${
-                      currentValue === option.value
-                        ? ""
-                        : " govuk-radios__conditional--hidden"
-                    }`}
+                    className="govuk-radios__conditional govuk-radios__conditional--hidden"
                     id={conditionalId}
                   >
                     {option.conditionalContent}

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Link } from "./Link.js";
 
 const meta: Meta<typeof Link> = {
-  title: "Components/Link",
+  title: "Typography/Link",
   component: Link,
   parameters: {
     layout: "padded",

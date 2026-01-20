@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 
+import '../../styles/core.scss'
 import "govuk-frontend/dist/govuk/components/button/_button.scss";
 
 export interface ButtonProps {

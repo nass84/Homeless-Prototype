@@ -8,13 +8,17 @@ const meta: Meta<typeof Header> = {
     layout: "fullscreen",
     docs: {
       description: {
-        component: `The header component shows users that they are on GOV.UK and which service they are using.
+        component: `> ⚠️ **Deprecated:** This component is deprecated. Use the [ServiceNavigation](?path=/docs/components-service-navigation--docs) component with the header prop instead.
 
-[Read more about how to use this component on the GOV.UK Design System](https://design-system.service.gov.uk/components/header/)`,
+The header component shows users that they are on GOV.UK and which service they are using.
+
+**Migration:** Replace \`<Header>\` with \`<ServiceNavigation>\` using the service name and URL props. See the [ServiceNavigation with header documentation](?path=/docs/components-service-navigation--docs#with-header-2) for examples.
+
+[Read more about the new Service Navigation component on the GOV.UK Design System](https://design-system.service.gov.uk/components/service-navigation/)`,
       },
     },
   },
-  tags: ["autodocs"],
+  tags: ["autodocs", "deprecated"],
   argTypes: {
     productName: {
       control: "text",

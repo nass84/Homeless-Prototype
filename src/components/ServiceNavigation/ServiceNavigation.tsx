@@ -1,9 +1,7 @@
-"use client";
-
-import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect } from "react";
 import { Link } from "../Link/Link.js";
 
+import '../../styles/objects.scss'
 import "govuk-frontend/dist/govuk/components/service-navigation/_service-navigation.scss";
 
 export interface ServiceNavigationItem {
@@ -50,8 +48,6 @@ export function ServiceNavigation({
     initialise();
   }, []);
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const hasServiceName = serviceName && serviceUrl;
   const hasNavigation = navigationItems.length > 0;
 
@@ -61,10 +57,6 @@ export function ServiceNavigation({
 
   // Determine the appropriate semantic element
   const ContainerElement = hasServiceName ? "section" : "div";
-
-  const handleToggle = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
 
   const linkClassName = "govuk-service-navigation__link";
 
@@ -97,17 +89,11 @@ export function ServiceNavigation({
                 type="button"
                 className="govuk-service-navigation__toggle govuk-js-service-navigation-toggle"
                 aria-controls="navigation"
-                aria-expanded={isMenuOpen}
-                hidden={!isMenuOpen}
-                onClick={handleToggle}
+                hidden
               >
                 {toggleLabel}
               </button>
-              <ul
-                className="govuk-service-navigation__list"
-                id="navigation"
-                style={isMenuOpen ? {} : undefined}
-              >
+              <ul className="govuk-service-navigation__list" id="navigation">
                 {navigationItems.map((item, index) => (
                   <li
                     key={`nav-item-${index}`}

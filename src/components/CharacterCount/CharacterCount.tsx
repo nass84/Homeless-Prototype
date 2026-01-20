@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 
+import '../../styles/core.scss'
 import "govuk-frontend/dist/govuk/components/character-count/_character-count.scss";
 
 export interface CharacterCountProps {

@@ -78,14 +78,13 @@ export const WithHeader: Story = {
   },
 };
 
-export const ServiceNameOnly: Story = {
-  args: {
-    serviceName: "Service name",
-    serviceUrl: "#",
-  },
-};
-
-export const ServiceNameAndNavigation: Story = {
+export const WithHeaderAndServiceName: Story = {
+  render: (args) => (
+    <>
+      <Header fullWidthBorder />
+      <ServiceNavigation {...args} />
+    </>
+  ),
   args: {
     serviceName: "Service name",
     serviceUrl: "#",
@@ -95,6 +94,15 @@ export const ServiceNameAndNavigation: Story = {
       { text: "Navigation item 3", href: "#" },
       { text: "Navigation item 4", href: "#" },
     ],
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `This is the recommended pattern when replacing the deprecated Header component. The GOV.UK header appears at the top, with the service name and navigation in the ServiceNavigation component below.
+
+This separates the GOV.UK branding from your service identity, which is the preferred approach for most services.`,
+      },
+    },
   },
 };
 
@@ -123,6 +131,12 @@ const MockRouterLink = ({
 );
 
 export const WithCustomRouter: Story = {
+  render: (args) => (
+    <>
+      <Header fullWidthBorder />
+      <ServiceNavigation {...args} />
+    </>
+  ),
   args: {
     serviceName: "Service name",
     serviceUrl: "/service-home",

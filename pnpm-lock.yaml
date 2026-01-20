@@ -60,6 +60,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^4.0.16
         version: 4.0.16(@vitest/browser@4.0.16(vite@7.3.1(sass-embedded@1.97.2)(sass@1.97.2))(vitest@4.0.16))(vitest@4.0.16)
+      esbuild-sass-plugin:
+        specifier: ^3.6.0
+        version: 3.6.0(esbuild@0.27.2)(sass-embedded@1.97.2)
       govuk-frontend:
         specifier: ^5.13.0
         version: 5.13.0
@@ -75,6 +78,9 @@ importers:
       react-dom:
         specifier: ^19.2.3
         version: 19.2.3(react@19.2.3)
+      sass:
+        specifier: ^1.97.2
+        version: 1.97.2
       sass-embedded:
         specifier: ^1.97.2
         version: 1.97.2
@@ -1299,6 +1305,12 @@ packages:
 
   es-module-lexer@1.7.0:
     resolution: {integrity: sha512-jEQoCwk8hyb2AZziIOLhDqpm5+2ww5uIE6lkO/6jcOCusfk6LhMHpXXfBLXTZ7Ydyt0j4VoUQv6uGNYbdW+kBA==}
+
+  esbuild-sass-plugin@3.6.0:
+    resolution: {integrity: sha512-lzPJQSEXcnj5amBPPib5lBjsDNPzvdMnX+1Rf7eha9BIpLSM5Ad2pi+Rqg5CAlWMduCgLntS2hLAqG7v1fxWGw==}
+    peerDependencies:
+      esbuild: '>=0.27.2'
+      sass-embedded: ^1.97.2
 
   esbuild@0.27.2:
     resolution: {integrity: sha512-HyNQImnsOC7X9PMNaCIeAm4ISCQXs5a5YasTXVliKv4uuBo1dKrG0A+uQS8M5eXjVMnLg3WgXaKvprHlFJQffw==}
@@ -3609,6 +3621,13 @@ snapshots:
 
   es-module-lexer@1.7.0: {}
 
+  esbuild-sass-plugin@3.6.0(esbuild@0.27.2)(sass-embedded@1.97.2):
+    dependencies:
+      esbuild: 0.27.2
+      resolve: 1.22.11
+      sass: 1.97.2
+      sass-embedded: 1.97.2
+
   esbuild@0.27.2:
     optionalDependencies:
       '@esbuild/aix-ppc64': 0.27.2
@@ -4295,7 +4314,6 @@ snapshots:
       source-map-js: 1.2.1
     optionalDependencies:
       '@parcel/watcher': 2.5.4
-    optional: true
 
   saxes@6.0.0:
     dependencies:

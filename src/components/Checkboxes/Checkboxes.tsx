@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 
+import '../../styles/core.scss'
 import "govuk-frontend/dist/govuk/components/checkboxes/_checkboxes.scss";
 
 export interface CheckboxOption {

@@ -1,5 +1,6 @@
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect } from "react";
 
+import '../../styles/core.scss'
 import "govuk-frontend/dist/govuk/components/password-input/_password-input.scss";
 
 export interface PasswordInputProps {
@@ -11,14 +12,21 @@ export interface PasswordInputProps {
   hint?: string;
   error?: string;
   autocomplete?: "current-password" | "new-password";
-  value?: string;
   defaultValue?: string;
-  onChange?: (value: string) => void;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
-  showButtonText?: string;
-  hideButtonText?: string;
-  showButtonAriaLabel?: string;
-  hideButtonAriaLabel?: string;
+  /** i18n: Text for the show password button */
+  showPasswordText?: string;
+  /** i18n: Text for the hide password button */
+  hidePasswordText?: string;
+  /** i18n: Aria label for show password button */
+  showPasswordAriaLabelText?: string;
+  /** i18n: Aria label for hide password button */
+  hidePasswordAriaLabelText?: string;
+  /** i18n: Screen reader announcement when password is shown */
+  passwordShownAnnouncementText?: string;
+  /** i18n: Screen reader announcement when password is hidden */
+  passwordHiddenAnnouncementText?: string;
 }
 
 export function PasswordInput({
@@ -30,14 +38,15 @@ export function PasswordInput({
   hint,
   error,
   autocomplete = "current-password",
-  value,
   defaultValue,
   onChange,
   className = "",
-  showButtonText = "Show",
-  hideButtonText = "Hide",
-  showButtonAriaLabel = "Show password",
-  hideButtonAriaLabel = "Hide password",
+  showPasswordText = "Show",
+  hidePasswordText = "Hide",
+  showPasswordAriaLabelText = "Show password",
+  hidePasswordAriaLabelText = "Hide password",
+  passwordShownAnnouncementText = "Your password is visible",
+  passwordHiddenAnnouncementText = "Your password is hidden",
 }: PasswordInputProps) {
   const initialise = async () => {
     // Dynamic import to avoid SSR issues
@@ -48,8 +57,6 @@ export function PasswordInput({
   useEffect(() => {
     initialise();
   }, []);
-
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const hintId = hint ? `${id}-hint` : undefined;
   const errorId = error ? `${id}-error` : undefined;
@@ -69,10 +76,24 @@ export function PasswordInput({
     error ? " govuk-input--error" : ""
   }${className ? ` ${className}` : ""}`;
 
-  // Toggle password visibility
-  const handleToggle = () => {
-    setIsPasswordVisible(!isPasswordVisible);
-  };
+  // Build i18n data attributes for govuk-frontend
+  const i18nDataAttributes: Record<string, string> = {};
+  if (showPasswordText !== "Show")
+    i18nDataAttributes["data-i18n.show-password"] = showPasswordText;
+  if (hidePasswordText !== "Hide")
+    i18nDataAttributes["data-i18n.hide-password"] = hidePasswordText;
+  if (showPasswordAriaLabelText !== "Show password")
+    i18nDataAttributes["data-i18n.show-password-aria-label"] =
+      showPasswordAriaLabelText;
+  if (hidePasswordAriaLabelText !== "Hide password")
+    i18nDataAttributes["data-i18n.hide-password-aria-label"] =
+      hidePasswordAriaLabelText;
+  if (passwordShownAnnouncementText !== "Your password is visible")
+    i18nDataAttributes["data-i18n.password-shown-announcement"] =
+      passwordShownAnnouncementText;
+  if (passwordHiddenAnnouncementText !== "Your password is hidden")
+    i18nDataAttributes["data-i18n.password-hidden-announcement"] =
+      passwordHiddenAnnouncementText;
 
   // Render label
   const labelElement = labelAsHeading ? (
@@ -88,7 +109,11 @@ export function PasswordInput({
   );
 
   return (
-    <div className={formGroupClass} data-module="govuk-password-input">
+    <div
+      className={formGroupClass}
+      data-module="govuk-password-input"
+      {...i18nDataAttributes}
+    >
       {labelElement}
 
       {hint && (
@@ -108,26 +133,23 @@ export function PasswordInput({
           className={inputClass}
           id={id}
           name={name}
-          type={isPasswordVisible ? "text" : "password"}
+          type="password"
           spellCheck={false}
           autoComplete={autocomplete}
           autoCapitalize="none"
-          value={value}
           defaultValue={defaultValue}
           aria-describedby={ariaDescribedBy}
-          onChange={(e) => onChange?.(e.target.value)}
+          onChange={onChange}
         />
         <button
           type="button"
           className="govuk-button govuk-button--secondary govuk-password-input__toggle govuk-js-password-input-toggle"
           data-module="govuk-button"
           aria-controls={id}
-          aria-label={
-            isPasswordVisible ? hideButtonAriaLabel : showButtonAriaLabel
-          }
-          onClick={handleToggle}
+          aria-label={showPasswordAriaLabelText}
+          hidden
         >
-          {isPasswordVisible ? hideButtonText : showButtonText}
+          {showPasswordText}
         </button>
       </div>
     </div>

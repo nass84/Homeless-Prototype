@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { useEffect, useRef } from "react";
 import { Link } from "../Link/Link.js";
 
+import '../../styles/core.scss'
 import "govuk-frontend/dist/govuk/components/error-summary/_error-summary.scss";
 
 export interface ErrorSummaryError {
