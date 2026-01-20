@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 
+import '../../styles/core.scss'
+
 export interface ParagraphProps {
   size?: 'l' | 'm' | 's'
   children: ReactNode

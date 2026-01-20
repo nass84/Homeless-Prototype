@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 
+import 'govuk-frontend/dist/govuk/components/warning-text/_warning-text.scss'
+
 export interface WarningTextProps {
   children: ReactNode
   iconFallbackText?: string

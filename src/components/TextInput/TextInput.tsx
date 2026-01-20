@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 
+import 'govuk-frontend/dist/govuk/components/input/_input.scss'
+
 export interface TextInputProps {
   id: string
   name: string

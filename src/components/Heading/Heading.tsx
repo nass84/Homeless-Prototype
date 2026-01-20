@@ -1,5 +1,7 @@
 import type { ReactNode, JSX } from 'react'
 
+import '../../styles/core.scss'
+
 export interface HeadingProps {
   level: 1 | 2 | 3 | 4 | 5 | 6
   size?: 'xl' | 'l' | 'm' | 's'

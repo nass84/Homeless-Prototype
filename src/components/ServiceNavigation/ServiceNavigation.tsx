@@ -1,46 +1,64 @@
-'use client'
+import { type ReactNode, useEffect } from "react";
+import { Link } from "../Link/Link.js";
 
-import { useState } from 'react'
-import { Link } from '../Link/Link.js'
+import '../../styles/objects.scss'
+import "govuk-frontend/dist/govuk/components/service-navigation/_service-navigation.scss";
 
 export interface ServiceNavigationItem {
-  text: string
-  href: string
-  active?: boolean
+  text: string;
+  href: string;
+  active?: boolean;
 }
 
 export interface ServiceNavigationProps {
-  serviceName?: string | undefined
-  serviceUrl?: string
-  navigationItems?: ServiceNavigationItem[]
-  navigationLabel?: string
-  toggleLabel?: string
-  ariaLabel?: string
-  className?: string
+  serviceName?: string | undefined;
+  serviceUrl?: string;
+  navigationItems?: ServiceNavigationItem[];
+  navigationLabel?: string;
+  toggleLabel?: string;
+  ariaLabel?: string;
+  className?: string;
+  /** When true, renders child element for service name link with merged props */
+  serviceNameAsChild?: boolean;
+  /** Custom content for the service name link (used with serviceNameAsChild) */
+  serviceNameChildren?: ReactNode;
+  /** Custom render function for navigation links */
+  renderNavLink?: (item: ServiceNavigationItem, className: string) => ReactNode;
 }
 
 export function ServiceNavigation({
   serviceName,
   serviceUrl,
   navigationItems = [],
-  navigationLabel = 'Menu',
-  toggleLabel = 'Menu',
-  ariaLabel = 'Service information',
-  className = '',
+  navigationLabel = "Menu",
+  toggleLabel = "Menu",
+  ariaLabel = "Service information",
+  className = "",
+  serviceNameAsChild = false,
+  serviceNameChildren,
+  renderNavLink,
 }: ServiceNavigationProps) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const initialise = async () => {
+    // Dynamic import to avoid SSR issues
+    const { ServiceNavigation, createAll } = await import("govuk-frontend");
+    createAll(ServiceNavigation);
+  };
 
-  const hasServiceName = serviceName && serviceUrl
-  const hasNavigation = navigationItems.length > 0
+  useEffect(() => {
+    initialise();
+  }, []);
 
-  const navigationClasses = `govuk-service-navigation${className ? ` ${className}` : ''}`
+  const hasServiceName = serviceName && serviceUrl;
+  const hasNavigation = navigationItems.length > 0;
+
+  const navigationClasses = `govuk-service-navigation${
+    className ? ` ${className}` : ""
+  }`;
 
   // Determine the appropriate semantic element
-  const ContainerElement = hasServiceName ? 'section' : 'div'
+  const ContainerElement = hasServiceName ? "section" : "div";
 
-  const handleToggle = () => {
-    setIsMenuOpen(!isMenuOpen)
-  }
+  const linkClassName = "govuk-service-navigation__link";
 
   return (
     <ContainerElement
@@ -52,49 +70,56 @@ export function ServiceNavigation({
         <div className="govuk-service-navigation__container">
           {hasServiceName && (
             <span className="govuk-service-navigation__service-name">
-              <Link href={serviceUrl} className="govuk-service-navigation__link">
-                {serviceName}
+              <Link
+                href={serviceUrl}
+                className={linkClassName}
+                asChild={serviceNameAsChild}
+              >
+                {serviceNameAsChild ? serviceNameChildren : serviceName}
               </Link>
             </span>
           )}
 
           {hasNavigation && (
-            <nav aria-label={navigationLabel} className="govuk-service-navigation__wrapper">
+            <nav
+              aria-label={navigationLabel}
+              className="govuk-service-navigation__wrapper"
+            >
               <button
                 type="button"
                 className="govuk-service-navigation__toggle govuk-js-service-navigation-toggle"
                 aria-controls="navigation"
-                aria-expanded={isMenuOpen}
-                hidden={!isMenuOpen}
-                onClick={handleToggle}
+                hidden
               >
                 {toggleLabel}
               </button>
-              <ul
-                className="govuk-service-navigation__list"
-                id="navigation"
-                style={isMenuOpen ? {} : undefined}
-              >
+              <ul className="govuk-service-navigation__list" id="navigation">
                 {navigationItems.map((item, index) => (
                   <li
                     key={`nav-item-${index}`}
                     className={`govuk-service-navigation__item${
-                      item.active ? ' govuk-service-navigation__item--active' : ''
+                      item.active
+                        ? " govuk-service-navigation__item--active"
+                        : ""
                     }`}
                   >
-                    <a
-                      className="govuk-service-navigation__link"
-                      href={item.href}
-                      aria-current={item.active ? 'true' : undefined}
-                    >
-                      {item.active ? (
-                        <strong className="govuk-service-navigation__active-fallback">
-                          {item.text}
-                        </strong>
-                      ) : (
-                        item.text
-                      )}
-                    </a>
+                    {renderNavLink ? (
+                      renderNavLink(item, linkClassName)
+                    ) : (
+                      <Link
+                        className={linkClassName}
+                        href={item.href}
+                        aria-current={item.active ? "true" : undefined}
+                      >
+                        {item.active ? (
+                          <strong className="govuk-service-navigation__active-fallback">
+                            {item.text}
+                          </strong>
+                        ) : (
+                          item.text
+                        )}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -103,5 +128,5 @@ export function ServiceNavigation({
         </div>
       </div>
     </ContainerElement>
-  )
+  );
 }

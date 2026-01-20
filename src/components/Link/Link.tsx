@@ -1,7 +1,9 @@
-import type { ReactNode } from 'react'
-import { useGDSReact } from '../GDSReactProvider/GDSReactProvider.js'
+import type { ComponentPropsWithoutRef, ReactNode } from 'react'
+import { Slot } from '@radix-ui/react-slot'
 
-export interface LinkProps {
+import '../../styles/core.scss'
+
+export interface LinkProps extends ComponentPropsWithoutRef<'a'> {
   href: string
   children: ReactNode
   noVisitedState?: boolean
@@ -12,6 +14,8 @@ export interface LinkProps {
   hreflang?: string
   className?: string
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void
+  /** When true, renders child element with merged props instead of an anchor */
+  asChild?: boolean
 }
 
 export function Link({
@@ -25,9 +29,9 @@ export function Link({
   hreflang,
   className = '',
   onClick = undefined,
+  asChild = false,
+  ...rest
 }: LinkProps) {
-  const { linkComponent: LinkComponent } = useGDSReact()
-
   // External links should open in new tab
   const shouldOpenInNewTab = opensInNewTab || external
 
@@ -62,18 +66,17 @@ export function Link({
     </>
   )
 
-  // Common props for both native and custom link components
+  // Common props for both native and Slot components
   const commonProps = {
     href,
     className: linkClass,
     ...newTabProps,
     ...hreflangProp,
     onClick: handleClick,
+    ...rest,
   }
 
-  if (LinkComponent) {
-    return <LinkComponent {...commonProps}>{content}</LinkComponent>
-  }
+  const Component = asChild ? Slot : 'a'
 
-  return <a {...commonProps}>{content}</a>
+  return <Component {...commonProps}>{content}</Component>
 }

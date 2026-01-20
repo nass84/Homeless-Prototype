@@ -3,7 +3,7 @@ import { List } from "./List.js";
 import { Link } from "../Link/Link.js";
 
 const meta: Meta<typeof List> = {
-  title: "Components/List",
+  title: "Typography/List",
   component: List,
   parameters: {
     layout: "padded",

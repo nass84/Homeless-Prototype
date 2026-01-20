@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react'
 import { Link } from '../Link/Link.js'
 
+import 'govuk-frontend/dist/govuk/components/summary-list/_summary-list.scss'
+
 export interface SummaryListAction {
   href: string
   text: string
@@ -28,13 +30,41 @@ export interface SummaryListProps {
     actions?: SummaryCardAction[]
   }
   className?: string
+  /** Custom render function for row action links */
+  renderRowActionLink?: (action: SummaryListAction, className: string) => ReactNode
+  /** Custom render function for card action links */
+  renderCardActionLink?: (action: SummaryCardAction, className: string) => ReactNode
 }
 
-export function SummaryList({ rows, noBorder = false, card, className = '' }: SummaryListProps) {
+export function SummaryList({
+  rows,
+  noBorder = false,
+  card,
+  className = '',
+  renderRowActionLink,
+  renderCardActionLink,
+}: SummaryListProps) {
   const listClass = `govuk-summary-list${noBorder ? ' govuk-summary-list--no-border' : ''}${className ? ` ${className}` : ''}`
 
   // Check if there's a mix of rows with and without actions
   const hasActionsInSomeRows = rows.some((row) => row.actions && row.actions.length > 0)
+
+  const linkClassName = 'govuk-link'
+
+  const renderAction = (action: SummaryListAction, index: number, rowIndex: number) => {
+    if (renderRowActionLink) {
+      return renderRowActionLink(action, linkClassName)
+    }
+
+    return (
+      <Link className={linkClassName} href={action.href}>
+        {action.text}
+        {action.visuallyHiddenText && (
+          <span className="govuk-visually-hidden"> {action.visuallyHiddenText}</span>
+        )}
+      </Link>
+    )
+  }
 
   const summaryListContent = (
     <dl className={listClass}>
@@ -51,15 +81,7 @@ export function SummaryList({ rows, noBorder = false, card, className = '' }: Su
             {hasActions && (
               <dd className="govuk-summary-list__actions">
                 {row.actions && row.actions.length === 1 && row.actions[0] ? (
-                  <Link className="govuk-link" href={row.actions[0].href}>
-                    {row.actions[0].text}
-                    {row.actions[0].visuallyHiddenText && (
-                      <span className="govuk-visually-hidden">
-                        {' '}
-                        {row.actions[0].visuallyHiddenText}
-                      </span>
-                    )}
-                  </Link>
+                  renderAction(row.actions[0], 0, index)
                 ) : (
                   <ul className="govuk-summary-list__actions-list">
                     {row.actions?.map((action, actionIndex) => (
@@ -67,15 +89,7 @@ export function SummaryList({ rows, noBorder = false, card, className = '' }: Su
                         key={`action-${index}-${actionIndex}`}
                         className="govuk-summary-list__actions-list-item"
                       >
-                        <Link className="govuk-link" href={action.href}>
-                          {action.text}
-                          {action.visuallyHiddenText && (
-                            <span className="govuk-visually-hidden">
-                              {' '}
-                              {action.visuallyHiddenText}
-                            </span>
-                          )}
-                        </Link>
+                        {renderAction(action, actionIndex, index)}
                       </li>
                     ))}
                   </ul>
@@ -104,12 +118,16 @@ export function SummaryList({ rows, noBorder = false, card, className = '' }: Su
           <ul className="govuk-summary-card__actions">
             {card.actions.map((action, index) => (
               <li key={`card-action-${index}`} className="govuk-summary-card__action">
-                <Link className="govuk-link" href={action.href}>
-                  {action.text}
-                  {action.visuallyHiddenText && (
-                    <span className="govuk-visually-hidden"> {action.visuallyHiddenText}</span>
-                  )}
-                </Link>
+                {renderCardActionLink ? (
+                  renderCardActionLink(action, linkClassName)
+                ) : (
+                  <Link className={linkClassName} href={action.href}>
+                    {action.text}
+                    {action.visuallyHiddenText && (
+                      <span className="govuk-visually-hidden"> {action.visuallyHiddenText}</span>
+                    )}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>

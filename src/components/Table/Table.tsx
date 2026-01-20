@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 
+import 'govuk-frontend/dist/govuk/components/table/_table.scss'
+
 export interface TableHeader {
   text: ReactNode
   format?: 'numeric'

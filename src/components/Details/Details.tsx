@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 
+import 'govuk-frontend/dist/govuk/components/details/_details.scss'
+
 export interface DetailsProps {
   summary: string
   children: ReactNode

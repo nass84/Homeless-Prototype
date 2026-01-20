@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 
+import 'govuk-frontend/dist/govuk/components/tag/_tag.scss'
+
 export type TagColour =
   | 'grey'
   | 'green'

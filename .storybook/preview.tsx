@@ -1,5 +1,4 @@
 import type { Preview } from "@storybook/react-vite";
-import { GDSReactProvider } from "../src/components/GDSReactProvider/GDSReactProvider.js";
 
 const preview: Preview = {
   parameters: {
@@ -11,7 +10,15 @@ const preview: Preview = {
     },
     options: {
       storySort: {
-        order: ["Welcome", "Core", "Page Structure", "Components", "*"],
+        order: [
+          "Guides",
+            ["Welcome - Read me first", "Router Integration"],
+          "Core",
+          "Page Structure",
+          "Typography",
+          "Components",
+          "*",
+        ],
       },
     },
     controls: {
@@ -36,11 +43,7 @@ const preview: Preview = {
       document.body.className +=
         " govuk-template__body js-enabled govuk-frontend-supported";
 
-      return (
-        <GDSReactProvider>
-          <Story />
-        </GDSReactProvider>
-      );
+      return <Story />;
     },
   ],
 };

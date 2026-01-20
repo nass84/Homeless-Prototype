@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 
+import 'govuk-frontend/dist/govuk/components/select/_select.scss'
+
 export interface SelectOption {
   value: string
   text: string

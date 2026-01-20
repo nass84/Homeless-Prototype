@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 
+import 'govuk-frontend/dist/govuk/components/date-input/_date-input.scss'
+
 export type DateInputOnChangeProps = {
   day: string
   month: string

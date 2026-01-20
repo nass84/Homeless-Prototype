@@ -1,3 +1,5 @@
+import 'govuk-frontend/dist/govuk/components/pagination/_pagination.scss'
+
 export interface PaginationMeta {
   page: number
   pageSize: number

@@ -1,6 +1,8 @@
 import type { ReactNode, JSX } from 'react'
 import { Link } from '../Link/Link.js'
 
+import 'govuk-frontend/dist/govuk/components/cookie-banner/_cookie-banner.scss'
+
 export interface CookieBannerAction {
   text: string
   type: 'button' | 'link'
@@ -25,6 +27,8 @@ export interface CookieBannerProps {
   messages: CookieBannerMessage[]
   ariaLabel?: string | undefined
   className?: string
+  /** Custom render function for action links */
+  renderActionLink?: (action: CookieBannerAction, className: string) => ReactNode
 }
 
 export function CookieBanner({
@@ -32,9 +36,12 @@ export function CookieBanner({
   messages,
   ariaLabel,
   className = '',
+  renderActionLink,
 }: CookieBannerProps) {
   const label = ariaLabel || `Cookies on ${serviceName}`
   const bannerClass = `govuk-cookie-banner${className ? ` ${className}` : ''}`
+
+  const linkClassName = 'govuk-link'
 
   return (
     <div className={bannerClass} data-nosnippet role="region" aria-label={label}>
@@ -67,8 +74,10 @@ export function CookieBanner({
               <div className="govuk-button-group">
                 {message.actions.map((action, actionIndex) => {
                   if (action.type === 'link') {
-                    return (
-                      <Link key={actionIndex} className="govuk-link" href={action.href || '#'}>
+                    return renderActionLink ? (
+                      <span key={actionIndex}>{renderActionLink(action, linkClassName)}</span>
+                    ) : (
+                      <Link key={actionIndex} className={linkClassName} href={action.href || '#'}>
                         {action.text}
                       </Link>
                     )

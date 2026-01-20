@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 
+import 'govuk-frontend/dist/govuk/components/phase-banner/_phase-banner.scss'
+
 export interface PhaseBannerProps {
   tag: 'alpha' | 'beta' | string
   children: ReactNode

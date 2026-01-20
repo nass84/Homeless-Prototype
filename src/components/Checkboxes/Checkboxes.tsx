@@ -1,27 +1,30 @@
-import type { ReactNode } from 'react'
+import { useEffect, type ReactNode } from "react";
+
+import '../../styles/core.scss'
+import "govuk-frontend/dist/govuk/components/checkboxes/_checkboxes.scss";
 
 export interface CheckboxOption {
-  label: string
-  value: string
-  hint?: string
-  id?: string
-  disabled?: boolean
-  exclusive?: boolean
-  conditionalContent?: ReactNode
+  label: string;
+  value: string;
+  hint?: string;
+  id?: string;
+  disabled?: boolean;
+  exclusive?: boolean;
+  conditionalContent?: ReactNode;
 }
 
 export interface CheckboxesProps {
-  name: string
-  legend: string | ReactNode
-  hint?: string
-  options: CheckboxOption[]
-  error?: string
-  legendSize?: 'xl' | 'l' | 'm' | 's'
-  small?: boolean
-  onChange?: (values: string[]) => void
-  defaultValue?: string[]
-  checkboxesClassName?: string
-  labelClassName?: string
+  name: string;
+  legend: string | ReactNode;
+  hint?: string;
+  options: CheckboxOption[];
+  error?: string;
+  legendSize?: "xl" | "l" | "m" | "s";
+  small?: boolean;
+  onChange?: (values: string[]) => void;
+  defaultValue?: string[];
+  checkboxesClassName?: string;
+  labelClassName?: string;
 }
 
 export function Checkboxes({
@@ -30,38 +33,53 @@ export function Checkboxes({
   hint,
   options,
   error,
-  legendSize = 'l',
+  legendSize = "l",
   small = false,
   onChange,
   defaultValue = [],
-  checkboxesClassName = '',
-  labelClassName = '',
+  checkboxesClassName = "",
+  labelClassName = "",
 }: CheckboxesProps) {
-  const hintId = hint ? `${name}-hint` : undefined
-  const errorId = error ? `${name}-error` : undefined
+  const initialise = async () => {
+    // Dynamic import to avoid SSR issues
+    const { Checkboxes, createAll } = await import("govuk-frontend");
+    createAll(Checkboxes);
+  };
+
+  useEffect(() => {
+    initialise();
+  }, []);
+
+  const hintId = hint ? `${name}-hint` : undefined;
+  const errorId = error ? `${name}-error` : undefined;
 
   // Build aria-describedby string
-  const ariaDescribedBy = [hintId, errorId].filter(Boolean).join(' ') || undefined
+  const ariaDescribedBy =
+    [hintId, errorId].filter(Boolean).join(" ") || undefined;
 
-  const legendClass = `govuk-fieldset__legend govuk-fieldset__legend--${legendSize}`
-  const checkboxesClass = `govuk-checkboxes${small ? ' govuk-checkboxes--small' : ''} ${checkboxesClassName}`
-  const formGroupClass = `govuk-form-group${error ? ' govuk-form-group--error' : ''}`
+  const legendClass = `govuk-fieldset__legend govuk-fieldset__legend--${legendSize}`;
+  const checkboxesClass = `govuk-checkboxes${
+    small ? " govuk-checkboxes--small" : ""
+  } ${checkboxesClassName}`;
+  const formGroupClass = `govuk-form-group${
+    error ? " govuk-form-group--error" : ""
+  }`;
 
   // Generate IDs for options
   const optionsWithIds = options.map((option, index) => ({
     ...option,
     id: option.id || (index === 0 ? name : `${name}-${index + 1}`),
-  }))
+  }));
 
   // Find exclusive options for divider
-  const exclusiveIndex = optionsWithIds.findIndex((opt) => opt.exclusive)
-  const hasExclusive = exclusiveIndex !== -1
+  const exclusiveIndex = optionsWithIds.findIndex((opt) => opt.exclusive);
+  const hasExclusive = exclusiveIndex !== -1;
 
   return (
     <div className={formGroupClass}>
       <fieldset className="govuk-fieldset" aria-describedby={ariaDescribedBy}>
         <legend className={legendClass}>
-          {typeof legend === 'string' ? (
+          {typeof legend === "string" ? (
             <h1 className="govuk-fieldset__heading">{legend}</h1>
           ) : (
             legend
@@ -82,9 +100,13 @@ export function Checkboxes({
 
         <div className={checkboxesClass} data-module="govuk-checkboxes">
           {optionsWithIds.map((option, index) => {
-            const itemHintId = option.hint ? `${option.id}-item-hint` : undefined
-            const conditionalId = option.conditionalContent ? `conditional-${option.id}` : undefined
-            const itemAriaDescribedBy = itemHintId || undefined
+            const itemHintId = option.hint
+              ? `${option.id}-item-hint`
+              : undefined;
+            const conditionalId = option.conditionalContent
+              ? `conditional-${option.id}`
+              : undefined;
+            const itemAriaDescribedBy = itemHintId || undefined;
 
             return (
               <div key={option.id}>
@@ -102,15 +124,18 @@ export function Checkboxes({
                     defaultChecked={defaultValue.includes(option.value)}
                     disabled={option.disabled}
                     aria-describedby={itemAriaDescribedBy}
-                    data-behaviour={option.exclusive ? 'exclusive' : undefined}
+                    data-behaviour={option.exclusive ? "exclusive" : undefined}
                     data-aria-controls={conditionalId}
                     onChange={(_e) => {
                       if (onChange) {
-                        const checkboxes = document.querySelectorAll<HTMLInputElement>(
-                          `input[name="${name}"]:checked`
-                        )
-                        const values = Array.from(checkboxes).map((cb) => cb.value)
-                        onChange(values)
+                        const checkboxes =
+                          document.querySelectorAll<HTMLInputElement>(
+                            `input[name="${name}"]:checked`
+                          );
+                        const values = Array.from(checkboxes).map(
+                          (cb) => cb.value
+                        );
+                        onChange(values);
                       }
                     }}
                   />
@@ -122,7 +147,10 @@ export function Checkboxes({
                   </label>
 
                   {option.hint && (
-                    <div id={itemHintId} className="govuk-hint govuk-checkboxes__hint">
+                    <div
+                      id={itemHintId}
+                      className="govuk-hint govuk-checkboxes__hint"
+                    >
                       {option.hint}
                     </div>
                   )}
@@ -137,10 +165,10 @@ export function Checkboxes({
                   </div>
                 )}
               </div>
-            )
+            );
           })}
         </div>
       </fieldset>
     </div>
-  )
+  );
 }

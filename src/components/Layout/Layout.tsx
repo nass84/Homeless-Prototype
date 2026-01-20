@@ -1,5 +1,7 @@
 import type { ReactNode, HTMLAttributes } from 'react'
 
+import '../../styles/objects.scss'
+
 export type ColumnWidth =
   | 'full'
   | 'one-half'

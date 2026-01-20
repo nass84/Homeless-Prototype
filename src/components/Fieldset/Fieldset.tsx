@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 
+import 'govuk-frontend/dist/govuk/components/fieldset/_fieldset.scss'
+
 export interface FieldsetProps {
   legend: string | ReactNode
   legendAsHeading?: boolean

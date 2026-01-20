@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Pagination } from "./Pagination.js";
+import { Pagination, type PaginationProps } from "./Pagination.js";
 
 const meta: Meta<typeof Pagination> = {
   title: "Components/Pagination",
@@ -33,7 +33,7 @@ const meta: Meta<typeof Pagination> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<PaginationProps>;
 
 export const Default: Story = {
   args: {
@@ -45,7 +45,7 @@ export const Default: Story = {
       hasNextPage: true,
       hasPreviousPage: true,
     },
-    onPageChange: (page) => console.log(`Page changed to ${page}`),
+    onPageChange: (page: number) => console.log(`Page changed to ${page}`),
   },
 };
 
@@ -59,7 +59,7 @@ export const WithEllipsis: Story = {
       hasNextPage: true,
       hasPreviousPage: true,
     },
-    onPageChange: (page) => console.log(`Page changed to ${page}`),
+    onPageChange: (page: number) => console.log(`Page changed to ${page}`),
   },
 };
 
@@ -73,7 +73,7 @@ export const FirstPage: Story = {
       hasNextPage: true,
       hasPreviousPage: false,
     },
-    onPageChange: (page) => console.log(`Page changed to ${page}`),
+    onPageChange: (page: number) => console.log(`Page changed to ${page}`),
   },
 };
 
@@ -87,7 +87,7 @@ export const LastPage: Story = {
       hasNextPage: false,
       hasPreviousPage: true,
     },
-    onPageChange: (page) => console.log(`Page changed to ${page}`),
+    onPageChange: (page: number) => console.log(`Page changed to ${page}`),
   },
 };
 

@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 
+import 'govuk-frontend/dist/govuk/components/textarea/_textarea.scss'
+
 export interface TextareaProps {
   id: string
   name: string

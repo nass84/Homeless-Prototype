@@ -66,7 +66,8 @@ export const WithServiceName: Story = {
     title: "Page with service name",
     children: (
       <Paragraph>
-        This page template includes a service name in the header.
+        This page template uses the recommended pattern: the GOV.UK Header
+        combined with ServiceNavigation for the service name.
       </Paragraph>
     ),
   },

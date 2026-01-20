@@ -1,32 +1,47 @@
-import type { ReactNode } from 'react'
+import { useEffect, type ReactNode } from "react";
+
+import "govuk-frontend/dist/govuk/components/notification-banner/_notification-banner.scss";
 
 export interface NotificationBannerProps {
-  title?: string
-  type?: 'neutral' | 'success'
-  heading?: string | ReactNode
-  children?: ReactNode
-  titleId?: string
-  className?: string
+  title?: string;
+  type?: "neutral" | "success";
+  heading?: string | ReactNode;
+  children?: ReactNode;
+  titleId?: string;
+  className?: string;
 }
 
 export function NotificationBanner({
   title,
-  type = 'neutral',
+  type = "neutral",
   heading,
   children,
-  titleId = 'govuk-notification-banner-title',
-  className = '',
+  titleId = "govuk-notification-banner-title",
+  className = "",
 }: NotificationBannerProps) {
+  const initialise = async () => {
+    // Dynamic import to avoid SSR issues
+    const { NotificationBanner, createAll } = await import("govuk-frontend");
+    createAll(NotificationBanner);
+  };
+
+  useEffect(() => {
+    initialise();
+  }, []);
+
   // Default titles based on type
-  const defaultTitle = type === 'success' ? 'Success' : 'Important'
-  const bannerTitle = title || defaultTitle
+  const defaultTitle = type === "success" ? "Success" : "Important";
+  const bannerTitle = title || defaultTitle;
 
   // Role based on type
-  const role = type === 'success' ? 'alert' : 'region'
+  const role = type === "success" ? "alert" : "region";
 
   // Build class names
-  const successClass = type === 'success' ? ' govuk-notification-banner--success' : ''
-  const bannerClass = `govuk-notification-banner${successClass}${className ? ` ${className}` : ''}`
+  const successClass =
+    type === "success" ? " govuk-notification-banner--success" : "";
+  const bannerClass = `govuk-notification-banner${successClass}${
+    className ? ` ${className}` : ""
+  }`;
 
   return (
     <div
@@ -42,7 +57,7 @@ export function NotificationBanner({
       </div>
       <div className="govuk-notification-banner__content">
         {heading &&
-          (typeof heading === 'string' ? (
+          (typeof heading === "string" ? (
             <p className="govuk-notification-banner__heading">{heading}</p>
           ) : (
             heading
@@ -50,5 +65,5 @@ export function NotificationBanner({
         {children}
       </div>
     </div>
-  )
+  );
 }

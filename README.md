@@ -26,23 +26,76 @@ yarn add @projectsbyif/gds-react govuk-frontend
 - govuk-frontend 5+
 - `sass` or `sass-embedded` (for your bundler to process GOV.UK Frontend styles)
 
-## Quick Start
+## Setup
 
-Wrap your application with `GDSReactProvider`:
+Components load GOV.UK Frontend styles and JavaScript automatically. For styling to work correctly, add these CSS classes to your HTML document:
 
-```tsx
-import { GDSReactProvider } from "@projectsbyif/gds-react";
-
-function App() {
-  return (
-    <GDSReactProvider>
-      <YourApplication />
-    </GDSReactProvider>
-  );
-}
+```html
+<!DOCTYPE html>
+<html lang="en" class="govuk-template govuk-template--rebranded">
+  <head>...</head>
+  <body class="govuk-template__body js-enabled govuk-frontend-supported">
+    <!-- Your React app -->
+  </body>
+</html>
 ```
 
+**Required classes:**
+- `govuk-template` and `govuk-template--rebranded` on `<html>` - Base template styles and refreshed GOV.UK branding (v5.10.0+)
+- `govuk-template__body` on `<body>` - Body template styles
+- `js-enabled` on `<body>` - Required for JS-dependent components (Accordion, Tabs, etc.)
+- `govuk-frontend-supported` on `<body>` - Indicates modern JavaScript support
+
 If you are approved to use GOV.UK assets, follow [this guide](https://frontend.design-system.service.gov.uk/import-font-and-images-assets/) to set up font and image assets.
+
+## Router Integration
+
+Use the `asChild` prop on Link components to integrate with your router (Next.js, React Router, TanStack Router, etc.):
+
+### Next.js App Router
+
+```tsx
+import { Link } from "@projectsbyif/gds-react";
+import NextLink from "next/link";
+
+<Link href="/dashboard" asChild>
+  <NextLink>Dashboard</NextLink>
+</Link>
+```
+
+### React Router
+
+```tsx
+import { Link } from "@projectsbyif/gds-react";
+import { Link as RouterLink } from "react-router-dom";
+
+<Link href="/users" asChild>
+  <RouterLink to="/users">View users</RouterLink>
+</Link>
+```
+
+### Multi-link Components
+
+For components with multiple links (Breadcrumbs, Footer, etc.), use the `renderLink` prop:
+
+```tsx
+import { Breadcrumbs } from "@projectsbyif/gds-react";
+import NextLink from "next/link";
+
+<Breadcrumbs
+  items={[
+    { text: "Home", href: "/" },
+    { text: "Products", href: "/products" },
+  ]}
+  renderLink={(item, className) => (
+    <NextLink href={item.href} className={className}>
+      {item.text}
+    </NextLink>
+  )}
+/>
+```
+
+See the [Router Integration guide](https://projectsbyif.github.io/gds-react/?path=/docs/guides-router-integration--docs) for more examples with different frameworks.
 
 ## GDS Transport Font Usage
 

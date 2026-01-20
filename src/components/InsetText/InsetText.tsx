@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 
+import 'govuk-frontend/dist/govuk/components/inset-text/_inset-text.scss'
+
 export interface InsetTextProps {
   children: ReactNode
   className?: string
