@@ -1,5 +1,8 @@
 import type { ReactNode } from 'react'
 
+// @ts-ignore: Ignore missing types for govuk-frontend
+import 'govuk-frontend/dist/govuk/components/tag/_tag.scss'
+
 export type TagColour =
   | 'grey'
   | 'green'

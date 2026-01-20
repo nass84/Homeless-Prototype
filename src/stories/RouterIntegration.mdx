@@ -1,0 +1,267 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Guides/Router Integration" />
+
+# Router Integration
+
+This guide shows how to integrate your router (Next.js, React Router, TanStack Router, etc.) with GDS React components.
+
+## The `asChild` Pattern
+
+GDS React uses the `asChild` pattern (via `@radix-ui/react-slot`) to allow you to render your own link component while preserving GOV.UK styling and accessibility.
+
+When you set `asChild={true}`, the component merges its props (className, href, etc.) onto your child element instead of rendering its own anchor tag.
+
+## Single Link Components
+
+For components with a single link (Link, BackLink, SkipLink, Header), use the `asChild` prop:
+
+### Next.js App Router
+
+```tsx
+import { Link, BackLink, Header } from "@projectsbyif/gds-react";
+import NextLink from "next/link";
+
+// Basic link
+<Link href="/about" asChild>
+  <NextLink>About us</NextLink>
+</Link>
+
+// Back link
+<BackLink href="/previous-page" asChild>
+  <NextLink>Back</NextLink>
+</BackLink>
+
+// Header with custom homepage link
+<Header
+  productName="My Service"
+  homepageUrl="/"
+  asChild
+>
+  <NextLink>
+    {/* Logo SVG and product name are rendered automatically */}
+  </NextLink>
+</Header>
+```
+
+### React Router
+
+```tsx
+import { Link, BackLink } from "@projectsbyif/gds-react";
+import { Link as RouterLink } from "react-router-dom";
+
+<Link href="/users" asChild>
+  <RouterLink to="/users">View users</RouterLink>
+</Link>
+
+<BackLink href="/dashboard" asChild>
+  <RouterLink to="/dashboard">Back</RouterLink>
+</BackLink>
+```
+
+### TanStack Router
+
+```tsx
+import { Link } from "@projectsbyif/gds-react";
+import { Link as TanStackLink } from "@tanstack/react-router";
+
+<Link href="/products" asChild>
+  <TanStackLink to="/products">Products</TanStackLink>
+</Link>
+```
+
+## Multi-Link Components
+
+For components with multiple links, use `renderLink` or similar render props:
+
+### Breadcrumbs
+
+```tsx
+import { Breadcrumbs } from "@projectsbyif/gds-react";
+import NextLink from "next/link";
+
+<Breadcrumbs
+  items={[
+    { text: "Home", href: "/" },
+    { text: "Products", href: "/products" },
+    { text: "Widget", href: "/products/widget" },
+  ]}
+  renderLink={(item, className) => (
+    <NextLink href={item.href} className={className}>
+      {item.text}
+    </NextLink>
+  )}
+/>
+```
+
+### Footer
+
+```tsx
+import { Footer } from "@projectsbyif/gds-react";
+import NextLink from "next/link";
+
+<Footer
+  navigation={[
+    {
+      title: "Services",
+      items: [
+        { text: "Apply online", href: "/apply" },
+        { text: "Check status", href: "/status" },
+      ],
+    },
+  ]}
+  meta={{
+    items: [
+      { text: "Help", href: "/help" },
+      { text: "Cookies", href: "/cookies" },
+    ],
+  }}
+  renderNavLink={(item, className) => (
+    <NextLink href={item.href} className={className}>
+      {item.text}
+    </NextLink>
+  )}
+  renderMetaLink={(item, className) => (
+    <NextLink href={item.href} className={className}>
+      {item.text}
+    </NextLink>
+  )}
+/>
+```
+
+### ServiceNavigation
+
+```tsx
+import { ServiceNavigation } from "@projectsbyif/gds-react";
+import NextLink from "next/link";
+
+<ServiceNavigation
+  serviceName="My Service"
+  serviceUrl="/"
+  serviceNameAsChild
+  serviceNameChildren={<NextLink>My Service</NextLink>}
+  navigationItems={[
+    { text: "Home", href: "/", active: true },
+    { text: "About", href: "/about" },
+    { text: "Contact", href: "/contact" },
+  ]}
+  renderNavLink={(item, className) => (
+    <NextLink
+      href={item.href}
+      className={className}
+      aria-current={item.active ? "true" : undefined}
+    >
+      {item.active ? (
+        <strong className="govuk-service-navigation__active-fallback">
+          {item.text}
+        </strong>
+      ) : (
+        item.text
+      )}
+    </NextLink>
+  )}
+/>
+```
+
+### ErrorSummary
+
+```tsx
+import { ErrorSummary } from "@projectsbyif/gds-react";
+
+// Note: ErrorSummary typically uses fragment links (#target) for in-page navigation
+// These usually don't need router integration, but the option is available:
+<ErrorSummary
+  errors={[
+    { target: "email", message: "Enter an email address" },
+    { target: "password", message: "Enter a password" },
+  ]}
+  renderLink={(error, className) => (
+    <a href={`#${error.target}`} className={className}>
+      {error.message}
+    </a>
+  )}
+/>
+```
+
+### CookieBanner
+
+```tsx
+import { CookieBanner } from "@projectsbyif/gds-react";
+import NextLink from "next/link";
+
+<CookieBanner
+  serviceName="My Service"
+  messages={[
+    {
+      heading: "Cookies on My Service",
+      content: "We use cookies to improve your experience.",
+      actions: [
+        { text: "Accept cookies", type: "button", onClick: handleAccept },
+        { text: "Reject cookies", type: "button", onClick: handleReject },
+        { text: "View cookie policy", type: "link", href: "/cookies" },
+      ],
+    },
+  ]}
+  renderActionLink={(action, className) => (
+    <NextLink href={action.href || "#"} className={className}>
+      {action.text}
+    </NextLink>
+  )}
+/>
+```
+
+### SummaryList
+
+```tsx
+import { SummaryList } from "@projectsbyif/gds-react";
+import NextLink from "next/link";
+
+<SummaryList
+  rows={[
+    {
+      key: "Name",
+      value: "Jane Smith",
+      actions: [
+        { text: "Change", href: "/change-name", visuallyHiddenText: "name" },
+      ],
+    },
+    {
+      key: "Email",
+      value: "jane@example.com",
+      actions: [
+        { text: "Change", href: "/change-email", visuallyHiddenText: "email" },
+      ],
+    },
+  ]}
+  renderRowActionLink={(action, className) => (
+    <NextLink href={action.href} className={className}>
+      {action.text}
+      {action.visuallyHiddenText && (
+        <span className="govuk-visually-hidden"> {action.visuallyHiddenText}</span>
+      )}
+    </NextLink>
+  )}
+/>
+```
+
+## API Reference
+
+| Component | Single Link Prop | Multi-Link Prop |
+|-----------|-----------------|-----------------|
+| Link | `asChild` | - |
+| BackLink | `asChild` | - |
+| SkipLink | `asChild` | - |
+| Header | `asChild` | - |
+| ServiceNavigation | `serviceNameAsChild` | `renderNavLink` |
+| Breadcrumbs | - | `renderLink` |
+| Footer | - | `renderNavLink`, `renderMetaLink` |
+| ErrorSummary | - | `renderLink` |
+| CookieBanner | - | `renderActionLink` |
+| SummaryList | - | `renderRowActionLink`, `renderCardActionLink` |
+
+## Tips
+
+- **Preserve className**: Always pass the `className` parameter to your link component to maintain GOV.UK styling
+- **Handle aria attributes**: For active states (ServiceNavigation), pass `aria-current` as shown in the examples
+- **Fragment links**: Components like ErrorSummary and SkipLink use fragment links (`#target`) that typically don't need router integration
+- **External links**: The Footer's OGL and Crown Copyright links are external government URLs - these remain as native anchors

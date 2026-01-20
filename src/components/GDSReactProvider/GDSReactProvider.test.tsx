@@ -61,6 +61,7 @@ describe("GDSReactProvider", () => {
 
     expect(initAll).not.toHaveBeenCalled();
   });
+});
 
 describe("useGDSReact", () => {
   it("throws when used outside provider", () => {

@@ -11,7 +11,7 @@ const preview: Preview = {
     },
     options: {
       storySort: {
-        order: ["Welcome", "Core", "Page Structure", "Components", "*"],
+        order: ["Guides", "Guides/Welcome - Read me first", "Guides/Router Integration",  "Core", "Page Structure", "Components", "*"],
       },
     },
     controls: {

@@ -1,4 +1,8 @@
+import type { ReactNode } from 'react'
 import { Link } from "../Link/Link.js"
+
+// @ts-ignore: Ignore missing types for govuk-frontend
+import 'govuk-frontend/dist/govuk/components/footer/_footer.scss'
 
 export interface FooterLink {
   text: string
@@ -30,6 +34,10 @@ export interface FooterProps {
   }
   containerClassName?: string
   className?: string
+  /** Custom render function for navigation links */
+  renderNavLink?: (item: FooterLink, className: string) => ReactNode
+  /** Custom render function for meta links */
+  renderMetaLink?: (item: FooterLink, className: string) => ReactNode
 }
 
 export function Footer({
@@ -39,15 +47,19 @@ export function Footer({
   copyright,
   containerClassName = 'govuk-width-container',
   className = '',
+  renderNavLink,
+  renderMetaLink,
 }: FooterProps) {
   const footerClass = `govuk-footer${className ? ` ${className}` : ''}`
+
+  const linkClassName = 'govuk-footer__link'
 
   // Default content licence
   const defaultContentLicence = contentLicence?.html || contentLicence?.text || (
     <>
       All content is available under the{' '}
       <a
-        className="govuk-footer__link"
+        className={linkClassName}
         href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
         rel="license"
       >
@@ -106,9 +118,13 @@ export function Footer({
                           key={`footer-nav-item-${sectionIndex}-${itemIndex}`}
                           className="govuk-footer__list-item"
                         >
-                          <Link className="govuk-footer__link" href={item.href}>
-                            {item.text}
-                          </Link>
+                          {renderNavLink ? (
+                            renderNavLink(item, linkClassName)
+                          ) : (
+                            <Link className={linkClassName} href={item.href}>
+                              {item.text}
+                            </Link>
+                          )}
                         </li>
                       ))}
                     </ul>
@@ -134,9 +150,13 @@ export function Footer({
                       key={`footer-meta-item-${index}`}
                       className="govuk-footer__inline-list-item"
                     >
-                      <Link className="govuk-footer__link" href={item.href}>
-                        {item.text}
-                      </Link>
+                      {renderMetaLink ? (
+                        renderMetaLink(item, linkClassName)
+                      ) : (
+                        <Link className={linkClassName} href={item.href}>
+                          {item.text}
+                        </Link>
+                      )}
                     </li>
                   ))}
                 </ul>

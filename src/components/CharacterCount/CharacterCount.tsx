@@ -1,21 +1,24 @@
-import type { ReactNode } from 'react'
+import { useEffect, type ReactNode } from "react";
+
+// @ts-ignore: Ignore missing types for govuk-frontend
+import "govuk-frontend/dist/govuk/components/character-count/_character-count.scss";
 
 export interface CharacterCountProps {
-  id: string
-  name: string
-  label: string | ReactNode
-  labelAsHeading?: boolean
-  labelSize?: 'l' | 'm' | 's'
-  hint?: string
-  error?: string
-  maxLength?: number
-  maxWords?: number
-  threshold?: number
-  rows?: number
-  value?: string
-  defaultValue?: string
-  onChange?: (value: string) => void
-  className?: string
+  id: string;
+  name: string;
+  label: string | ReactNode;
+  labelAsHeading?: boolean;
+  labelSize?: "l" | "m" | "s";
+  hint?: string;
+  error?: string;
+  maxLength?: number;
+  maxWords?: number;
+  threshold?: number;
+  rows?: number;
+  value?: string;
+  defaultValue?: string;
+  onChange?: (value: string) => void;
+  className?: string;
 }
 
 export function CharacterCount({
@@ -23,7 +26,7 @@ export function CharacterCount({
   name,
   label,
   labelAsHeading = false,
-  labelSize = 'l',
+  labelSize = "l",
   hint,
   error,
   maxLength,
@@ -33,39 +36,55 @@ export function CharacterCount({
   value,
   defaultValue,
   onChange,
-  className = '',
+  className = "",
 }: CharacterCountProps) {
-  const hintId = hint ? `${id}-hint` : undefined
-  const errorId = error ? `${id}-error` : undefined
-  const infoId = `${id}-info`
+  const initialise = async () => {
+    // Dynamic import to avoid SSR issues
+    const { CharacterCount, createAll } = await import("govuk-frontend");
+    createAll(CharacterCount);
+  };
+
+  useEffect(() => {
+    initialise();
+  }, []);
+
+  const hintId = hint ? `${id}-hint` : undefined;
+  const errorId = error ? `${id}-error` : undefined;
+  const infoId = `${id}-info`;
 
   // Build aria-describedby string
-  const ariaDescribedBy = [infoId, hintId, errorId].filter(Boolean).join(' ')
+  const ariaDescribedBy = [infoId, hintId, errorId].filter(Boolean).join(" ");
 
   // Build class names
-  const formGroupClass = `govuk-form-group govuk-character-count${error ? ' govuk-form-group--error' : ''}`
-  const labelClass = labelAsHeading ? `govuk-label govuk-label--${labelSize}` : 'govuk-label'
-  const textareaClass = `govuk-textarea govuk-js-character-count${error ? ' govuk-textarea--error' : ''}${className ? ` ${className}` : ''}`
+  const formGroupClass = `govuk-form-group govuk-character-count${
+    error ? " govuk-form-group--error" : ""
+  }`;
+  const labelClass = labelAsHeading
+    ? `govuk-label govuk-label--${labelSize}`
+    : "govuk-label";
+  const textareaClass = `govuk-textarea govuk-js-character-count${
+    error ? " govuk-textarea--error" : ""
+  }${className ? ` ${className}` : ""}`;
 
   // Build data attributes
   const dataAttributes: Record<string, string> = {
-    'data-module': 'govuk-character-count',
-  }
+    "data-module": "govuk-character-count",
+  };
 
   if (maxLength) {
-    dataAttributes['data-maxlength'] = maxLength.toString()
+    dataAttributes["data-maxlength"] = maxLength.toString();
   } else if (maxWords) {
-    dataAttributes['data-maxwords'] = maxWords.toString()
+    dataAttributes["data-maxwords"] = maxWords.toString();
   }
 
   if (threshold) {
-    dataAttributes['data-threshold'] = threshold.toString()
+    dataAttributes["data-threshold"] = threshold.toString();
   }
 
   // Generate static message for non-JS users
-  const countType = maxWords ? 'words' : 'characters'
-  const limit = maxLength || maxWords || 0
-  const staticMessage = `You can enter up to ${limit} ${countType}`
+  const countType = maxWords ? "words" : "characters";
+  const limit = maxLength || maxWords || 0;
+  const staticMessage = `You can enter up to ${limit} ${countType}`;
 
   // Render label
   const labelElement = labelAsHeading ? (
@@ -78,7 +97,7 @@ export function CharacterCount({
     <label className={labelClass} htmlFor={id}>
       {label}
     </label>
-  )
+  );
 
   return (
     <div className={formGroupClass} {...dataAttributes}>
@@ -111,5 +130,5 @@ export function CharacterCount({
         {staticMessage}
       </div>
     </div>
-  )
+  );
 }

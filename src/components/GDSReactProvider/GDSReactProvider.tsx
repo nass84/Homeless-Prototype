@@ -11,7 +11,7 @@ import type { GDSReactConfig, GDSReactProviderProps } from "./types.js";
 
 // Import GOV.UK Frontend styles
 // @ts-ignore: Ignore missing types for govuk-frontend
-import 'govuk-frontend/dist/govuk/index.scss'
+// import 'govuk-frontend/dist/govuk/index.scss'
 
 const GDSReactContext = createContext<GDSReactConfig | null>(null);
 
@@ -71,7 +71,6 @@ export function GDSReactProvider({
   children,
   autoInit = true,
   scope,
-  linkComponent,
 }: GDSReactProviderProps): ReactNode {
   const [isInitialised, setIsInitialised] = useState(false);
   const initRef = useRef(false);
@@ -81,41 +80,40 @@ export function GDSReactProvider({
       // Skip on server
       if (typeof window === "undefined") return;
 
-      try {
-        // Dynamic import to avoid SSR issues
-        const { initAll } = await import("govuk-frontend");
+      // try {
+      //   // Dynamic import to avoid SSR issues
+      //   const { initAll } = await import("govuk-frontend");
 
-        initAll({
-          scope: scopeElement ?? document.body,
-        });
+      //   initAll({
+      //     scope: scopeElement ?? document.body,
+      //   });
 
-        setIsInitialised(true);
-      } catch (error) {
-        console.error("Failed to initialise GOV.UK Frontend:", error);
-      }
+      //   setIsInitialised(true);
+      // } catch (error) {
+      //   console.error("Failed to initialise GOV.UK Frontend:", error);
+      // }
     },
     []
   );
 
   const reinitialise = useCallback(() => {
-    initialise(scope);
+   // initialise(scope);
   }, [initialise, scope]);
 
   // Initial setup
-  useEffect(() => {
-    // Prevent double-init in React Strict Mode
-    if (initRef.current) return;
+  // useEffect(() => {
+  //   // Prevent double-init in React Strict Mode
+  //   if (initRef.current) return;
 
-    if (autoInit) {
-      initRef.current = true;
-      initialise(scope);
-    }
-  }, [autoInit, initialise, scope]);
+  //   if (autoInit) {
+  //     initRef.current = true;
+  //     initialise(scope);
+  //   }
+  // }, [autoInit, initialise, scope]);
 
   const contextValue: GDSReactConfig = {
     isInitialised,
     reinitialise,
-    linkComponent,
   };
 
   return (

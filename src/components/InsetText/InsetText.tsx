@@ -1,5 +1,8 @@
 import type { ReactNode } from 'react'
 
+// @ts-ignore: Ignore missing types for govuk-frontend
+import 'govuk-frontend/dist/govuk/components/inset-text/_inset-text.scss'
+
 export interface InsetTextProps {
   children: ReactNode
   className?: string

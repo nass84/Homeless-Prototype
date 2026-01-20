@@ -1,4 +1,7 @@
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
+
+// @ts-ignore: Ignore missing types for govuk-frontend
+import "govuk-frontend/dist/govuk/components/file-upload/_file-upload.scss";
 
 export interface FileUploadProps {
   id: string;
@@ -23,6 +26,16 @@ export function FileUpload({
   onChange,
   className = "",
 }: FileUploadProps) {
+  const initialise = async () => {
+    // Dynamic import to avoid SSR issues
+    const { FileUpload, createAll } = await import("govuk-frontend");
+    createAll(FileUpload);
+  };
+
+  useEffect(() => {
+    initialise();
+  }, []);
+
   const hintId = hint ? `${id}-hint` : undefined;
   const errorId = error ? `${id}-error` : undefined;
 

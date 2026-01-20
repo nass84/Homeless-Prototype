@@ -22,8 +22,8 @@ The GDSReactProvider initialises GOV.UK Frontend for your React application.
 Wrap your application (or the GOV.UK-styled section) with this provider to:
 - Load GOV.UK Frontend CSS
 - Initialise JavaScript behaviours (accordions, character counts, etc.)
-- Provide configuration to child components via context
 
+For routing integration (Next.js, React Router, etc.), see the Link component's \`asChild\` prop.
         `,
       },
     },
@@ -161,67 +161,6 @@ export const DynamicContent: Story = {
       description: {
         story:
           "Demonstrates using `reinitialise()` when adding GOV.UK components dynamically.",
-      },
-    },
-  },
-};
-
-
-function CustomRouterDemo() {
-  const example_code = `import { GDSReactProvider } from "@projectsbyif/gds-react";
-import Link from 'next/link'
-
-function App() {
- return (
-   <GDSReactProvider linkComponent={({ href, children, ...props }) => (
-       <NextLink
-         href={href}
-         // Don't prefetch certain links (e.g. logout url)
-         prefetch={href?.includes('logout') ? false : undefined}
-         {...props}
-       >
-         {children}
-       </NextLink>
-     )}>
-     {/* All links from this library will now use the NextLink */}
-     <YourApplication />
-   </GDSReactProvider>
- );
-}`
-
-  return (
-    <div>
-      <Heading level={1}>Custom Router Integration</Heading>
-
-      <Paragraph className="govuk-body">
-        Pass a custom link component (e.g. Next.js Link) to{" "}
-        <code>GDSReactProvider</code> via the <code>linkComponent</code> prop.
-        All Link components will use your custom router.
-      </Paragraph>
-
-
-      <code><pre>
-        {example_code}</pre>
-      </code>
-    </div>
-  );
-}
-
-export const CustomRouter: Story = {
-  render: () => (
-    <GDSReactProvider linkComponent={({ href, children, ...props }) => (
-       <a data-info={"Use your router component instead of an anchor"} {...props}>
-         {children}
-       </a>
-     )}>
-      <CustomRouterDemo />
-    </GDSReactProvider>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Demonstrates passing a custom link component (e.g. Next.js Link) to `GDSReactProvider`. All links within the provider will use the custom router. This example shows conditional prefetch control where logout links have prefetch disabled.",
       },
     },
   },

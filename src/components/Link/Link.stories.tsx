@@ -53,6 +53,10 @@ const meta: Meta<typeof Link> = {
       control: "text",
       description: "Additional CSS classes",
     },
+    asChild: {
+      control: "boolean",
+      description: "Render child element with merged props instead of an anchor",
+    },
   },
   decorators: [
     (Story) => (
@@ -128,8 +132,12 @@ export const LanguageSwitching: Story = {
   ),
 };
 
-// Custom link component stories - demonstrating GDSReactProvider integration
+// asChild pattern stories - demonstrating router integration
 
+/**
+ * Mock router link component that simulates Next.js Link behavior.
+ * The pink dashed outline indicates the custom router is being used.
+ */
 const MockRouterLink = ({
   href,
   children,
@@ -142,35 +150,49 @@ const MockRouterLink = ({
     onClick={(e) => {
       e.preventDefault();
       console.log("[MockRouter] Navigating to:", href);
-      props.onClick?.(e);
     }}
   >
     {children}
   </a>
 );
 
-export const WithCustomRouter: Story = {
+export const AsChild: Story = {
   args: {
     href: "/dashboard",
-    children: "Go to dashboard (custom router)",
+    asChild: true,
+    children: <MockRouterLink>Go to dashboard (custom router)</MockRouterLink>,
   },
-  decorators: [
-    (Story) => (
-      <GDSReactProvider linkComponent={MockRouterLink}>
-        <Story />
-      </GDSReactProvider>
-    ),
-  ],
   parameters: {
     docs: {
       description: {
-        story:
-          "Demonstrates using a custom link component via `GDSReactProvider`. The pink dashed outline indicates the custom router is being used.",
+        story: `Use the \`asChild\` prop to render a custom router link component. The Link component merges its props (className, href, etc.) onto the child element.
+
+\`\`\`tsx
+// With Next.js
+import NextLink from 'next/link'
+
+<Link href="/dashboard" asChild>
+  <NextLink>Dashboard</NextLink>
+</Link>
+
+// With React Router
+import { Link as RouterLink } from 'react-router-dom'
+
+<Link href="/dashboard" asChild>
+  <RouterLink to="/dashboard">Dashboard</RouterLink>
+</Link>
+\`\`\`
+
+The pink dashed outline in this example indicates the custom router is being used.`,
       },
     },
   },
 };
 
+/**
+ * Mock Next.js-style link with conditional prefetch.
+ * Green outline = prefetch enabled, orange = prefetch disabled.
+ */
 const MockNextLink = ({
   href,
   children,
@@ -195,7 +217,6 @@ const MockNextLink = ({
           "| Prefetch:",
           shouldPrefetch
         );
-        props.onClick?.(e);
       }}
     >
       {children}
@@ -203,44 +224,88 @@ const MockNextLink = ({
   );
 };
 
-export const WithPrefetchControl: Story = {
-  args: {
-    href: "/logout",
-    children: "Logout (prefetch disabled)",
-  },
-  decorators: [
-    (Story) => (
-      <GDSReactProvider linkComponent={MockNextLink}>
-        <Story />
-      </GDSReactProvider>
-    ),
-  ],
+export const WithNextJsLink: Story = {
+  render: () => (
+    <div className="govuk-body">
+      <p>
+        <Link href="/settings" asChild>
+          <MockNextLink>Settings (prefetch enabled)</MockNextLink>
+        </Link>
+      </p>
+      <p>
+        <Link href="/logout" asChild>
+          <MockNextLink>Logout (prefetch disabled)</MockNextLink>
+        </Link>
+      </p>
+    </div>
+  ),
   parameters: {
     docs: {
       description: {
-        story:
-          "Demonstrates conditional prefetch control for Next.js-style routers. Orange outline = prefetch disabled (e.g. logout links), green = prefetch enabled.",
+        story: `Demonstrates conditional prefetch control for Next.js-style routers. Orange outline = prefetch disabled (e.g. logout links), green = prefetch enabled.
+
+\`\`\`tsx
+import NextLink from 'next/link'
+
+// You can wrap NextLink to add custom logic
+const AppLink = ({ href, children, ...props }) => {
+  const shouldPrefetch = !href?.includes('logout')
+  return (
+    <NextLink href={href} prefetch={shouldPrefetch} {...props}>
+      {children}
+    </NextLink>
+  )
+}
+
+// Then use with asChild
+<Link href="/logout" asChild>
+  <AppLink>Logout</AppLink>
+</Link>
+\`\`\``,
       },
     },
   },
 };
 
-export const PrefetchEnabled: Story = {
+/**
+ * Mock React Router link component.
+ */
+const MockReactRouterLink = ({
+  href,
+  children,
+  ...props
+}: React.ComponentProps<"a">) => (
+  <a
+    {...props}
+    href={href}
+    style={{ outline: "2px dashed dodgerblue", outlineOffset: "2px" }}
+    onClick={(e) => {
+      e.preventDefault();
+      console.log("[ReactRouter] Navigating to:", href);
+    }}
+  >
+    {children}
+  </a>
+);
+
+export const WithReactRouterLink: Story = {
   args: {
-    href: "/settings",
-    children: "Settings (prefetch enabled)",
+    href: "/users",
+    asChild: true,
+    children: <MockReactRouterLink>View users (React Router)</MockReactRouterLink>,
   },
-  decorators: [
-    (Story) => (
-      <GDSReactProvider linkComponent={MockNextLink}>
-        <Story />
-      </GDSReactProvider>
-    ),
-  ],
   parameters: {
     docs: {
       description: {
-        story: "A normal route with prefetch enabled (green outline).",
+        story: `Use with React Router's Link component. The blue dashed outline indicates React Router is being used.
+
+\`\`\`tsx
+import { Link as RouterLink } from 'react-router-dom'
+
+<Link href="/users" asChild>
+  <RouterLink to="/users">View users</RouterLink>
+</Link>
+\`\`\``,
       },
     },
   },

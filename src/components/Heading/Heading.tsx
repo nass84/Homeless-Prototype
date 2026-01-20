@@ -1,5 +1,8 @@
 import type { ReactNode, JSX } from 'react'
 
+// @ts-ignore: Ignore missing types for govuk-frontend
+import '../../styles/core.scss'
+
 export interface HeadingProps {
   level: 1 | 2 | 3 | 4 | 5 | 6
   size?: 'xl' | 'l' | 'm' | 's'

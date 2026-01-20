@@ -44,6 +44,53 @@ function App() {
 
 If you are approved to use GOV.UK assets, follow [this guide](https://frontend.design-system.service.gov.uk/import-font-and-images-assets/) to set up font and image assets.
 
+## Router Integration
+
+Use the `asChild` prop on Link components to integrate with your router (Next.js, React Router, TanStack Router, etc.):
+
+### Next.js App Router
+
+```tsx
+import { Link } from "@projectsbyif/gds-react";
+import NextLink from "next/link";
+
+<Link href="/dashboard" asChild>
+  <NextLink>Dashboard</NextLink>
+</Link>
+```
+
+### React Router
+
+```tsx
+import { Link } from "@projectsbyif/gds-react";
+import { Link as RouterLink } from "react-router-dom";
+
+<Link href="/users" asChild>
+  <RouterLink to="/users">View users</RouterLink>
+</Link>
+```
+
+### Multi-link Components
+
+For components with multiple links (Breadcrumbs, Footer, etc.), use the `renderLink` prop:
+
+```tsx
+import { Breadcrumbs } from "@projectsbyif/gds-react";
+import NextLink from "next/link";
+
+<Breadcrumbs
+  items={[
+    { text: "Home", href: "/" },
+    { text: "Products", href: "/products" },
+  ]}
+  renderLink={(item, className) => (
+    <NextLink href={item.href} className={className}>
+      {item.text}
+    </NextLink>
+  )}
+/>
+```
+
 ## GDS Transport Font Usage
 
 The GDS Transport font is only licensed for use on gov.uk subdomains. If you're not building for gov.uk, the library will fall back to Arial.

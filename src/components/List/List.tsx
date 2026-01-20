@@ -1,5 +1,8 @@
 import type { ReactNode } from 'react'
 
+// @ts-ignore: Ignore missing types for govuk-frontend
+import '../../styles/core.scss'
+
 export interface ListProps {
   type?: 'bullet' | 'number' | 'plain'
   spaced?: boolean

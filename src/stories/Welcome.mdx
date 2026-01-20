@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 
-<Meta title="Welcome - Read me first" />
+<Meta title="Guides/Welcome - Read me first" />
 
 # GDSReact
 
@@ -67,31 +67,38 @@ function App() {
 
 Most React frameworks use a router for navigation, such as [Next.js Link](https://nextjs.org/docs/app/api-reference/components/link) or [React Router](https://reactrouter.com/).
 
-Pass your router component to `GDSReactProvider` via the `linkComponent` prop. Using a function allows you to configure props based on runtime values:
+Use the `asChild` prop to integrate your router's Link component:
 
 ```tsx
-import { GDSReactProvider } from "@projectsbyif/gds-react";
-import Link from 'next/link';
+import { Link } from "@projectsbyif/gds-react";
+import NextLink from "next/link";
 
-function App() {
-  return (
-    <GDSReactProvider
-      linkComponent={({ href, children, ...props }) => (
-        <Link
-          href={href}
-          // Disable prefetching for certain links (e.g. logout)
-          prefetch={href?.includes('logout') ? false : undefined}
-          {...props}
-        >
-          {children}
-        </Link>
-      )}
-    >
-      <YourApplication />
-    </GDSReactProvider>
-  );
-}
+// Single link components - use asChild
+<Link href="/dashboard" asChild>
+  <NextLink>Dashboard</NextLink>
+</Link>
 ```
+
+For components with multiple links (Breadcrumbs, Footer, etc.), use the `renderLink` prop:
+
+```tsx
+import { Breadcrumbs } from "@projectsbyif/gds-react";
+import NextLink from "next/link";
+
+<Breadcrumbs
+  items={[
+    { text: "Home", href: "/" },
+    { text: "Products", href: "/products" },
+  ]}
+  renderLink={(item, className) => (
+    <NextLink href={item.href} className={className}>
+      {item.text}
+    </NextLink>
+  )}
+/>
+```
+
+See [Router Integration](?path=/docs/guides-router-integration--docs) for more examples with different frameworks.
 
 ## Troubleshooting
 
@@ -107,5 +114,6 @@ function App() {
 
 ### Links aren't working as expected
 
-- Ensure you've set the `linkComponent` prop on `GDSReactProvider`
-- If links prefetch unexpectedly, modify `linkComponent` to disable prefetching on logout links (see example above)
+- Use the `asChild` prop with your router's Link component
+- For multi-link components, use the appropriate `renderLink` prop
+- See [Router Integration](?path=/docs/guides-router-integration--docs) for examples

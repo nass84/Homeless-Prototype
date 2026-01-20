@@ -1,5 +1,8 @@
 import type { ReactNode } from 'react'
 
+// @ts-ignore: Ignore missing types for govuk-frontend
+import 'govuk-frontend/dist/govuk/components/panel/_panel.scss'
+
 export interface PanelProps {
   title: ReactNode
   children?: ReactNode

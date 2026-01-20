@@ -1,36 +1,51 @@
-import type { ReactNode } from 'react'
+import { useEffect, type ReactNode } from "react";
+
+// @ts-ignore: Ignore missing types for govuk-frontend
+import "govuk-frontend/dist/govuk/components/button/_button.scss";
 
 export interface ButtonProps {
-  children: ReactNode
-  variant?: 'default' | 'start' | 'secondary' | 'warning' | 'inverse'
-  href?: string
-  type?: 'submit' | 'button' | 'reset'
-  disabled?: boolean
-  preventDoubleClick?: boolean
-  onClick?: () => void
-  className?: string
+  children: ReactNode;
+  variant?: "default" | "start" | "secondary" | "warning" | "inverse";
+  href?: string;
+  type?: "submit" | "button" | "reset";
+  disabled?: boolean;
+  preventDoubleClick?: boolean;
+  onClick?: () => void;
+  className?: string;
 }
 
 export function Button({
   children,
-  variant = 'default',
+  variant = "default",
   href,
-  type = 'submit',
+  type = "submit",
   disabled = false,
   preventDoubleClick = false,
   onClick,
-  className = '',
+  className = "",
 }: ButtonProps) {
+  const initialise = async () => {
+    // Dynamic import to avoid SSR issues
+    const { Button, createAll } = await import("govuk-frontend");
+    createAll(Button);
+  };
+
+  useEffect(() => {
+    initialise();
+  }, []);
+
   // Build class names
-  const variantClass = variant !== 'default' ? ` govuk-button--${variant}` : ''
-  const buttonClasses = `govuk-button${variantClass}${className ? ` ${className}` : ''}`
+  const variantClass = variant !== "default" ? ` govuk-button--${variant}` : "";
+  const buttonClasses = `govuk-button${variantClass}${
+    className ? ` ${className}` : ""
+  }`;
 
   // Common props for both button and link
-  const dataModule = 'govuk-button'
-  const preventDoubleClickAttr = preventDoubleClick ? 'true' : undefined
+  const dataModule = "govuk-button";
+  const preventDoubleClickAttr = preventDoubleClick ? "true" : undefined;
 
   // Render start button icon
-  const startIcon = variant === 'start' && (
+  const startIcon = variant === "start" && (
     <svg
       className="govuk-button__start-icon"
       xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +57,7 @@ export function Button({
     >
       <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
     </svg>
-  )
+  );
 
   // Render as Link for start buttons with href
   if (href) {
@@ -59,7 +74,7 @@ export function Button({
         {children}
         {startIcon}
       </a>
-    )
+    );
   }
 
   // Render as button
@@ -76,5 +91,5 @@ export function Button({
       {children}
       {startIcon}
     </button>
-  )
+  );
 }

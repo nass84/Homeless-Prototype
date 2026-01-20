@@ -1,5 +1,8 @@
 import { Tag, type TagColour } from '../Tag/Tag.js'
 
+// @ts-ignore: Ignore missing types for govuk-frontend
+import 'govuk-frontend/dist/govuk/components/task-list/_task-list.scss'
+
 export interface TaskListStatus {
   text: string
   colour?: TagColour

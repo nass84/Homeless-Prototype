@@ -1,22 +1,25 @@
-import { type ReactNode, useState } from 'react'
+import { type ReactNode, useEffect, useState } from "react";
+
+// @ts-ignore: Ignore missing types for govuk-frontend
+import "govuk-frontend/dist/govuk/components/password-input/_password-input.scss";
 
 export interface PasswordInputProps {
-  id: string
-  name: string
-  label: string | ReactNode
-  labelAsHeading?: boolean
-  labelSize?: 'l' | 'm' | 's'
-  hint?: string
-  error?: string
-  autocomplete?: 'current-password' | 'new-password'
-  value?: string
-  defaultValue?: string
-  onChange?: (value: string) => void
-  className?: string
-  showButtonText?: string
-  hideButtonText?: string
-  showButtonAriaLabel?: string
-  hideButtonAriaLabel?: string
+  id: string;
+  name: string;
+  label: string | ReactNode;
+  labelAsHeading?: boolean;
+  labelSize?: "l" | "m" | "s";
+  hint?: string;
+  error?: string;
+  autocomplete?: "current-password" | "new-password";
+  value?: string;
+  defaultValue?: string;
+  onChange?: (value: string) => void;
+  className?: string;
+  showButtonText?: string;
+  hideButtonText?: string;
+  showButtonAriaLabel?: string;
+  hideButtonAriaLabel?: string;
 }
 
 export function PasswordInput({
@@ -24,36 +27,53 @@ export function PasswordInput({
   name,
   label,
   labelAsHeading = true,
-  labelSize = 'l',
+  labelSize = "l",
   hint,
   error,
-  autocomplete = 'current-password',
+  autocomplete = "current-password",
   value,
   defaultValue,
   onChange,
-  className = '',
-  showButtonText = 'Show',
-  hideButtonText = 'Hide',
-  showButtonAriaLabel = 'Show password',
-  hideButtonAriaLabel = 'Hide password',
+  className = "",
+  showButtonText = "Show",
+  hideButtonText = "Hide",
+  showButtonAriaLabel = "Show password",
+  hideButtonAriaLabel = "Hide password",
 }: PasswordInputProps) {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
+  const initialise = async () => {
+    // Dynamic import to avoid SSR issues
+    const { PasswordInput, createAll } = await import("govuk-frontend");
+    createAll(PasswordInput);
+  };
 
-  const hintId = hint ? `${id}-hint` : undefined
-  const errorId = error ? `${id}-error` : undefined
+  useEffect(() => {
+    initialise();
+  }, []);
+
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const hintId = hint ? `${id}-hint` : undefined;
+  const errorId = error ? `${id}-error` : undefined;
 
   // Build aria-describedby string
-  const ariaDescribedBy = [hintId, errorId].filter(Boolean).join(' ') || undefined
+  const ariaDescribedBy =
+    [hintId, errorId].filter(Boolean).join(" ") || undefined;
 
   // Build class names
-  const formGroupClass = `govuk-form-group govuk-password-input${error ? ' govuk-form-group--error' : ''}`
-  const labelClass = labelAsHeading ? `govuk-label govuk-label--${labelSize}` : 'govuk-label'
-  const inputClass = `govuk-input govuk-password-input__input govuk-js-password-input-input${error ? ' govuk-input--error' : ''}${className ? ` ${className}` : ''}`
+  const formGroupClass = `govuk-form-group govuk-password-input${
+    error ? " govuk-form-group--error" : ""
+  }`;
+  const labelClass = labelAsHeading
+    ? `govuk-label govuk-label--${labelSize}`
+    : "govuk-label";
+  const inputClass = `govuk-input govuk-password-input__input govuk-js-password-input-input${
+    error ? " govuk-input--error" : ""
+  }${className ? ` ${className}` : ""}`;
 
   // Toggle password visibility
   const handleToggle = () => {
-    setIsPasswordVisible(!isPasswordVisible)
-  }
+    setIsPasswordVisible(!isPasswordVisible);
+  };
 
   // Render label
   const labelElement = labelAsHeading ? (
@@ -66,7 +86,7 @@ export function PasswordInput({
     <label className={labelClass} htmlFor={id}>
       {label}
     </label>
-  )
+  );
 
   return (
     <div className={formGroupClass} data-module="govuk-password-input">
@@ -89,7 +109,7 @@ export function PasswordInput({
           className={inputClass}
           id={id}
           name={name}
-          type={isPasswordVisible ? 'text' : 'password'}
+          type={isPasswordVisible ? "text" : "password"}
           spellCheck={false}
           autoComplete={autocomplete}
           autoCapitalize="none"
@@ -103,12 +123,14 @@ export function PasswordInput({
           className="govuk-button govuk-button--secondary govuk-password-input__toggle govuk-js-password-input-toggle"
           data-module="govuk-button"
           aria-controls={id}
-          aria-label={isPasswordVisible ? hideButtonAriaLabel : showButtonAriaLabel}
+          aria-label={
+            isPasswordVisible ? hideButtonAriaLabel : showButtonAriaLabel
+          }
           onClick={handleToggle}
         >
           {isPasswordVisible ? hideButtonText : showButtonText}
         </button>
       </div>
     </div>
-  )
+  );
 }
