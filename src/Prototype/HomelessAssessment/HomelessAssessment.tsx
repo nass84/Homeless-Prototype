@@ -15,6 +15,7 @@ import { WarningText } from '../../components/WarningText/WarningText.js'
 import { Heading } from '../../components/Heading/Heading.js'
 import { NotificationBanner } from '../../components/NotificationBanner/NotificationBanner.js'
 import { SummaryList } from '../../components/SummaryList/SummaryList.js'
+import { Panel } from '../../components/Panel/Panel.js'
 import housing1 from './images/housing1.jpg'
 import housing2 from './images/housing2.jpg'
 import housing3 from './images/housing3.jpg'
@@ -79,7 +80,8 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
   const [transcript, setTranscript] = useState('')
   const [interimTranscript, setInterimTranscript] = useState('')
   const [isSupported, setIsSupported] = useState(true)
-  const [currentView, setCurrentView] = useState<'guidance' | 'recording' | 'formEntry' | 'form' | 'loading' | 'results' | 'confirmation'>('guidance')
+  const [currentView, setCurrentView] = useState<'guidance' | 'recording' | 'formEntry' | 'form' | 'loading' | 'results' | 'confirmation' | 'bookingConfirmed'>('guidance')
+  const [emailSent, setEmailSent] = useState(false)
   const [formData, setFormData] = useState<any>(null)
   const [rejectionReason, setRejectionReason] = useState('')
   const [currentPropertyIndex, setCurrentPropertyIndex] = useState(0)
@@ -89,6 +91,8 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
   const [translateMode, setTranslateMode] = useState(false)
   const [translateLanguage, setTranslateLanguage] = useState('')
   const [showLanguageSelector, setShowLanguageSelector] = useState(false)
+  const [originalTranscript, setOriginalTranscript] = useState('')
+  const [originalInterim, setOriginalInterim] = useState('')
 
   const translateLanguages = [
     { code: 'ar-SA', label: 'Arabic' },
@@ -455,12 +459,17 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
 
       if (final) {
         if (translateMode && translateLanguage) {
+          // Store original language text
+          setOriginalTranscript(prev => prev + final)
           // Simulate AI translation to English
-          const selectedLang = translateLanguages.find(l => l.code === translateLanguage)
-          setTranscript(prev => prev + `[Translated from ${selectedLang?.label}] ${final}`)
+          // In production this would call a translation API
+          setTranscript(prev => prev + final)
         } else {
           setTranscript(prev => prev + final)
         }
+      }
+      if (translateMode && translateLanguage) {
+        setOriginalInterim(interim)
       }
       setInterimTranscript(interim)
     }
@@ -496,6 +505,8 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
 
     setTranscript('')
     setInterimTranscript('')
+    setOriginalTranscript('')
+    setOriginalInterim('')
     setCurrentView('recording')
     recognitionRef.current?.start()
     setIsRecording(true)
@@ -575,9 +586,7 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
   }
 
   const confirmProperty = () => {
-    // Final confirmation - could trigger actual booking logic here
-    alert('Property confirmed! The applicant will be contacted with move-in details.')
-    setCurrentView('form')
+    setCurrentView('bookingConfirmed')
   }
 
   const handleRejection = (e: React.FormEvent<HTMLFormElement>) => {
@@ -586,9 +595,10 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
     const reason = form.get('rejectionReason') as string
 
     if (!reason) {
-      alert('Please provide a reason why this property is not suitable')
+      setErrors([{ target: 'rejectionReason', message: 'Enter a reason why this property is not suitable' }])
       return
     }
+    setErrors([])
 
     setRejectionReason(reason)
     // Move to next property and simulate searching
@@ -616,54 +626,64 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
             This assessment helps us understand your housing situation so we can decide what help we can offer.
           </p>
 
-          <p className="govuk-body">We use the information you give to:</p>
+          <p className="govuk-body">We use the information you give us to:</p>
           <ul className="govuk-list govuk-list--bullet">
             <li>check if we have a legal duty to help you</li>
-            <li>decide what housing or support may be available</li>
+            <li>decide what housing or support may be available to you</li>
           </ul>
 
           <p className="govuk-body">We keep your information confidential.</p>
 
-          <Heading level={2} size="m">Before you start</Heading>
+          <Heading level={2} size="m">Before we start</Heading>
           <p className="govuk-body">
             This assessment is made up of several sections. You can take your time and answer as fully as you can.
           </p>
           <p className="govuk-body">
             Some questions may feel personal or difficult. You only need to share what you are comfortable with,
-            but missing information may affect the support we can offer.
+            but missing information may affect the support we can offer you.
           </p>
 
           <Heading level={2} size="m">Recording the assessment</Heading>
           <p className="govuk-body">
-            If you agree, we can record this assessment so we do not need to type. You can speak in the language you are most comfortable using and the AI will translate for you.
+            If you agree, we can record this assessment so we do not need to type. You can speak in the language you are most comfortable with and we will translate it.
           </p>
           <p className="govuk-body">
             The recording is used only to make sure we capture your information accurately.
             It will not be shared outside the housing team.
           </p>
           <p className="govuk-body">
-            You can stop the recording at any time.
+            You can ask us to stop the recording at any time.
           </p>
 
-          <p className="govuk-body">You can choose to:</p>
-          <ul className="govuk-list govuk-list--bullet">
-            <li>start voice recording, or</li>
-            <li>fill in the form yourself</li>
-          </ul>
+          <div className="govuk-checkboxes" style={{ marginTop: '20px', marginBottom: '30px' }}>
+            <div className="govuk-checkboxes__item">
+              <input
+                className="govuk-checkboxes__input"
+                id="recording-consent"
+                type="checkbox"
+                checked={checkedQuestions['recording-consent'] || false}
+                onChange={(e) => setCheckedQuestions({...checkedQuestions, 'recording-consent': e.target.checked})}
+              />
+              <label className="govuk-label govuk-checkboxes__label" htmlFor="recording-consent">
+                I agree to have this assessment recorded
+              </label>
+            </div>
+          </div>
 
-          <Heading level={2} size="m">What to do next</Heading>
-          <p className="govuk-body">
-            Choose how you want to complete the assessment.
-          </p>
+          <Heading level={2} size="m">How would you like to complete this assessment?</Heading>
 
           <div style={{ marginTop: '30px' }}>
             <ButtonGroup>
-              <Button onClick={startVoiceRecording}>
-                Start voice recording
-              </Button>
-              <Button variant="secondary" onClick={fillByHand}>
-                Fill in the form yourself
-              </Button>
+              <div>
+                <Button onClick={startVoiceRecording} disabled={!checkedQuestions['recording-consent']}>
+                  Start voice recording
+                </Button>
+              </div>
+              <div>
+                <Button variant="secondary" onClick={fillByHand}>
+                  Fill in the form by hand
+                </Button>
+              </div>
             </ButtonGroup>
           </div>
         </>
@@ -685,7 +705,18 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 {!isPaused ? (
-                  <strong className="govuk-tag govuk-tag--red">Recording</strong>
+                  <>
+                    <span style={{
+                      display: 'inline-block',
+                      width: '12px',
+                      height: '12px',
+                      borderRadius: '50%',
+                      backgroundColor: '#d4351c',
+                      animation: 'pulse 1.5s ease-in-out infinite',
+                    }} />
+                    <style>{`@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }`}</style>
+                    <strong className="govuk-tag govuk-tag--red">Recording</strong>
+                  </>
                 ) : (
                   <strong className="govuk-tag govuk-tag--yellow">Paused</strong>
                 )}
@@ -697,12 +728,14 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
               </div>
               <ButtonGroup>
                 <Button onClick={() => setShowLanguageSelector(!showLanguageSelector)} variant="secondary">
-                  Translate
+                  {translateMode && translateLanguage
+                    ? `Translating: ${translateLanguages.find(l => l.code === translateLanguage)?.label}`
+                    : 'Translate'}
                 </Button>
                 <Button onClick={pauseRecording} variant="secondary">
                   {isPaused ? 'Resume' : 'Pause'}
                 </Button>
-                <Button onClick={stopRecording} variant="warning">
+                <Button onClick={stopRecording}>
                   Stop and complete form
                 </Button>
               </ButtonGroup>
@@ -742,6 +775,82 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
                 </fieldset>
               </div>
             )}
+            {/* Live transcription inside controls bar */}
+            {translateMode && translateLanguage ? (
+              <div style={{ marginTop: '15px' }}>
+                {(originalTranscript || originalInterim) && (
+                  <div style={{
+                    fontFamily: 'monospace',
+                    fontSize: '16px',
+                    lineHeight: '1.8',
+                    whiteSpace: 'pre-wrap',
+                    wordWrap: 'break-word',
+                    maxHeight: '120px',
+                    overflow: 'auto',
+                    padding: '15px',
+                    backgroundColor: '#ffffff',
+                    borderLeft: '4px solid #505a5f',
+                    marginBottom: '10px'
+                  }}>
+                    <strong className="govuk-tag govuk-tag--grey" style={{ marginBottom: '8px', display: 'inline-block' }}>
+                      {translateLanguages.find(l => l.code === translateLanguage)?.label}
+                    </strong>
+                    <br />
+                    {originalTranscript}
+                    {originalInterim && (
+                      <span style={{ color: '#505a5f', fontStyle: 'italic' }}>
+                        {originalInterim}
+                      </span>
+                    )}
+                  </div>
+                )}
+                <div style={{
+                  fontFamily: 'monospace',
+                  fontSize: '16px',
+                  lineHeight: '1.8',
+                  whiteSpace: 'pre-wrap',
+                  wordWrap: 'break-word',
+                  maxHeight: '120px',
+                  overflow: 'auto',
+                  padding: '15px',
+                  backgroundColor: '#ffffff',
+                  borderLeft: '4px solid #1d70b8',
+                }}>
+                  <strong className="govuk-tag govuk-tag--blue" style={{ marginBottom: '8px', display: 'inline-block' }}>
+                    English
+                  </strong>
+                  <br />
+                  {transcript || <span style={{ color: '#505a5f', fontStyle: 'italic' }}>Waiting for speech...</span>}
+                  {interimTranscript && (
+                    <span style={{ color: '#505a5f', fontStyle: 'italic' }}>
+                      {interimTranscript}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ) : (transcript || interimTranscript) ? (
+              <div style={{ marginTop: '15px' }}>
+                <div style={{
+                  fontFamily: 'monospace',
+                  fontSize: '14px',
+                  lineHeight: '1.6',
+                  whiteSpace: 'pre-wrap',
+                  wordWrap: 'break-word',
+                  maxHeight: '150px',
+                  overflow: 'auto',
+                  padding: '15px',
+                  backgroundColor: '#ffffff',
+                  borderLeft: '4px solid #1d70b8',
+                }}>
+                  {transcript}
+                  {interimTranscript && (
+                    <span style={{ color: '#505a5f', fontStyle: 'italic' }}>
+                      {interimTranscript}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ) : null}
           </div>
 
           {/* Progress indicator */}
@@ -750,33 +859,13 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
           </p>
           <Heading level={1} size="l">{stepTitles[recordingStep - 1]}</Heading>
 
-          {/* Live transcription (collapsible) */}
-          {(transcript || interimTranscript) && (
-            <Details summary="View live transcription">
-              <div style={{
-                fontFamily: 'monospace',
-                fontSize: '14px',
-                lineHeight: '1.6',
-                whiteSpace: 'pre-wrap',
-                wordWrap: 'break-word',
-                maxHeight: '150px',
-                overflow: 'auto'
-              }}>
-                {transcript}
-                {interimTranscript && (
-                  <span style={{ color: '#505a5f', fontStyle: 'italic' }}>
-                    {interimTranscript}
-                  </span>
-                )}
-              </div>
-            </Details>
-          )}
-
           {/* Step 1: Identity and contact details */}
           {recordingStep === 1 && (
             <div style={{ marginTop: '20px' }}>
               <p className="govuk-body">We ask this so we can contact you quickly about your accommodation.</p>
-              <div className="govuk-checkboxes govuk-checkboxes--small" style={{ marginTop: '20px' }}>
+              <p className="govuk-body" style={{ marginTop: '20px', marginBottom: '10px' }}><strong>Caseworker prompts</strong></p>
+              <p className="govuk-hint">Tick each question as you ask it</p>
+              <div className="govuk-checkboxes govuk-checkboxes--small" style={{ marginTop: '10px' }}>
                 <div className="govuk-checkboxes__item">
                   <input className="govuk-checkboxes__input" id="q1-1" type="checkbox"
                     checked={checkedQuestions['q1-1'] || false}
@@ -817,7 +906,9 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
           {recordingStep === 2 && (
             <div style={{ marginTop: '20px' }}>
               <p className="govuk-body">We ask this to work out the size and type of accommodation needed.</p>
-              <div className="govuk-checkboxes govuk-checkboxes--small" style={{ marginTop: '20px' }}>
+              <p className="govuk-body" style={{ marginTop: '20px', marginBottom: '10px' }}><strong>Caseworker prompts</strong></p>
+              <p className="govuk-hint">Tick each question as you ask it</p>
+              <div className="govuk-checkboxes govuk-checkboxes--small" style={{ marginTop: '10px' }}>
                 <div className="govuk-checkboxes__item">
                   <input className="govuk-checkboxes__input" id="q2-1" type="checkbox"
                     checked={checkedQuestions['q2-1'] || false}
@@ -874,7 +965,9 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
           {recordingStep === 3 && (
             <div style={{ marginTop: '20px' }}>
               <p className="govuk-body">We ask this to understand how urgently you need accommodation.</p>
-              <div className="govuk-checkboxes govuk-checkboxes--small" style={{ marginTop: '20px' }}>
+              <p className="govuk-body" style={{ marginTop: '20px', marginBottom: '10px' }}><strong>Caseworker prompts</strong></p>
+              <p className="govuk-hint">Tick each question as you ask it</p>
+              <div className="govuk-checkboxes govuk-checkboxes--small" style={{ marginTop: '10px' }}>
                 <div className="govuk-checkboxes__item">
                   <input className="govuk-checkboxes__input" id="q3-1" type="checkbox"
                     checked={checkedQuestions['q3-1'] || false}
@@ -907,7 +1000,9 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
           {recordingStep === 4 && (
             <div style={{ marginTop: '20px' }}>
               <p className="govuk-body">We ask this to understand where we can safely place you.</p>
-              <div className="govuk-checkboxes govuk-checkboxes--small" style={{ marginTop: '20px' }}>
+              <p className="govuk-body" style={{ marginTop: '20px', marginBottom: '10px' }}><strong>Caseworker prompts</strong></p>
+              <p className="govuk-hint">Tick each question as you ask it</p>
+              <div className="govuk-checkboxes govuk-checkboxes--small" style={{ marginTop: '10px' }}>
                 <div className="govuk-checkboxes__item">
                   <input className="govuk-checkboxes__input" id="q4-1" type="checkbox"
                     checked={checkedQuestions['q4-1'] || false}
@@ -940,7 +1035,9 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
           {recordingStep === 5 && (
             <div style={{ marginTop: '20px' }}>
               <p className="govuk-body">We ask this to make sure any accommodation we offer is safe and suitable.</p>
-              <div className="govuk-checkboxes govuk-checkboxes--small" style={{ marginTop: '20px' }}>
+              <p className="govuk-body" style={{ marginTop: '20px', marginBottom: '10px' }}><strong>Caseworker prompts</strong></p>
+              <p className="govuk-hint">Tick each question as you ask it</p>
+              <div className="govuk-checkboxes govuk-checkboxes--small" style={{ marginTop: '10px' }}>
                 <div className="govuk-checkboxes__item">
                   <input className="govuk-checkboxes__input" id="q5-1" type="checkbox"
                     checked={checkedQuestions['q5-1'] || false}
@@ -989,7 +1086,9 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
           {recordingStep === 6 && (
             <div style={{ marginTop: '20px' }}>
               <p className="govuk-body">We ask this before placing anyone in temporary accommodation.</p>
-              <div className="govuk-checkboxes govuk-checkboxes--small" style={{ marginTop: '20px' }}>
+              <p className="govuk-body" style={{ marginTop: '20px', marginBottom: '10px' }}><strong>Caseworker prompts</strong></p>
+              <p className="govuk-hint">Tick each question as you ask it</p>
+              <div className="govuk-checkboxes govuk-checkboxes--small" style={{ marginTop: '10px' }}>
                 <div className="govuk-checkboxes__item">
                   <input className="govuk-checkboxes__input" id="q6-1" type="checkbox"
                     checked={checkedQuestions['q6-1'] || false}
@@ -1022,7 +1121,9 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
           {recordingStep === 7 && (
             <div style={{ marginTop: '20px' }}>
               <p className="govuk-body">We ask this to make sure temporary accommodation will work for you.</p>
-              <div className="govuk-checkboxes govuk-checkboxes--small" style={{ marginTop: '20px' }}>
+              <p className="govuk-body" style={{ marginTop: '20px', marginBottom: '10px' }}><strong>Caseworker prompts</strong></p>
+              <p className="govuk-hint">Tick each question as you ask it</p>
+              <div className="govuk-checkboxes govuk-checkboxes--small" style={{ marginTop: '10px' }}>
                 <div className="govuk-checkboxes__item">
                   <input className="govuk-checkboxes__input" id="q7-1" type="checkbox"
                     checked={checkedQuestions['q7-1'] || false}
@@ -1048,7 +1149,9 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
             <div style={{ marginTop: '20px' }}>
               <p className="govuk-body">We need to check a few things before we can offer temporary accommodation.</p>
               <p className="govuk-body govuk-!-margin-bottom-4">These questions help us understand whether the council is allowed to provide housing support.</p>
-              <div className="govuk-checkboxes govuk-checkboxes--small" style={{ marginTop: '20px' }}>
+              <p className="govuk-body" style={{ marginTop: '20px', marginBottom: '10px' }}><strong>Caseworker prompts</strong></p>
+              <p className="govuk-hint">Tick each question as you ask it</p>
+              <div className="govuk-checkboxes govuk-checkboxes--small" style={{ marginTop: '10px' }}>
                 <div className="govuk-checkboxes__item">
                   <input className="govuk-checkboxes__input" id="q8-1" type="checkbox"
                     checked={checkedQuestions['q8-1'] || false}
@@ -1075,7 +1178,9 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
           {recordingStep === 9 && (
             <div style={{ marginTop: '20px' }}>
               <p className="govuk-body">These final questions help us find the right short-term accommodation.</p>
-              <div className="govuk-checkboxes govuk-checkboxes--small" style={{ marginTop: '20px' }}>
+              <p className="govuk-body" style={{ marginTop: '20px', marginBottom: '10px' }}><strong>Caseworker prompts</strong></p>
+              <p className="govuk-hint">Tick each question as you ask it</p>
+              <div className="govuk-checkboxes govuk-checkboxes--small" style={{ marginTop: '10px' }}>
                 <div className="govuk-checkboxes__item">
                   <input className="govuk-checkboxes__input" id="q9-1" type="checkbox"
                     checked={checkedQuestions['q9-1'] || false}
@@ -1639,9 +1744,13 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
               }
             `}
           </style>
-          <Heading level={2} size="m">Matching you with emergency accommodation</Heading>
+          <Heading level={2} size="m">
+            {currentPropertyIndex > 0 ? 'Searching for alternative accommodation' : 'Matching you with emergency accommodation'}
+          </Heading>
           <p className="govuk-body" style={{ fontSize: '19px', marginTop: '20px' }}>
-            Please wait while we search our database for suitable properties based on your needs...
+            {currentPropertyIndex > 0
+              ? 'Please wait while we find another suitable property...'
+              : 'Please wait while we search our database for suitable properties based on your needs...'}
           </p>
         </div>
       )}
@@ -1863,12 +1972,22 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
                 </div>
               </dl>
 
-              <Button onClick={() => window.location.href = `mailto:${currentProperty.landlord.email}?subject=Emergency accommodation booking — ${currentProperty.name}`}>
-                Contact landlord by email
-              </Button>
-              <p className="govuk-body govuk-!-margin-top-2" style={{ color: '#505a5f' }}>
-                Use this if you are unable to get through by phone
-              </p>
+              {emailSent ? (
+                <div className="govuk-inset-text" style={{ borderColor: '#00703c' }}>
+                  Email sent to {currentProperty.landlord.email}
+                </div>
+              ) : (
+                <>
+                  <Button onClick={() => {
+                    setEmailSent(true)
+                  }}>
+                    Send email to landlord
+                  </Button>
+                  <p className="govuk-body govuk-!-margin-top-2" style={{ color: '#505a5f' }}>
+                    An email will be sent to the landlord with the booking details and applicant reference
+                  </p>
+                </>
+              )}
             </div>
 
             <div style={{
@@ -1904,6 +2023,73 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
                 </Button>
               </ButtonGroup>
             </div>
+          </>
+        )
+      })()}
+
+      {currentView === 'bookingConfirmed' && (() => {
+        const currentProperty = properties[currentPropertyIndex]
+        if (!currentProperty) return null
+
+        return (
+          <>
+            <Panel title="Booking confirmed">
+              Your reference number<br />
+              <strong>HDN-2024-{String(currentPropertyIndex + 1).padStart(4, '0')}</strong>
+            </Panel>
+
+            <p className="govuk-body govuk-!-margin-top-6">
+              We have sent a confirmation email to the applicant and the landlord.
+            </p>
+
+            <Heading level={2} size="m">What happens next</Heading>
+
+            <p className="govuk-body">
+              The landlord has been notified and will prepare the property for move-in. The applicant will receive details about:
+            </p>
+
+            <ul className="govuk-list govuk-list--bullet">
+              <li>move-in date and key collection</li>
+              <li>tenancy agreement signing</li>
+              <li>any support services available at the property</li>
+            </ul>
+
+            <div style={{
+              border: '2px solid #b1b4b6',
+              padding: '20px',
+              marginTop: '30px',
+              marginBottom: '30px',
+              backgroundColor: '#f3f2f1'
+            }}>
+              <Heading level={3} size="s">Booking summary</Heading>
+              <SummaryList
+                noBorder
+                rows={[
+                  { key: 'Property', value: currentProperty.name },
+                  { key: 'Address', value: currentProperty.address.split('\n').join(', ') },
+                  { key: 'Property type', value: currentProperty.propertyType },
+                  { key: 'Landlord', value: `${currentProperty.landlord.name} (${currentProperty.landlord.company})` },
+                  { key: 'Landlord phone', value: currentProperty.landlord.phone },
+                  { key: 'Available from', value: currentProperty.availableFrom },
+                ]}
+              />
+            </div>
+
+            <ButtonGroup>
+              <Button onClick={() => {
+                setCurrentView('guidance')
+                setCurrentPropertyIndex(0)
+                setEmailSent(false)
+                setFormStep(1)
+                setRecordingStep(1)
+                setCheckedQuestions({})
+                setTranscript('')
+                setOriginalTranscript('')
+                setErrors([])
+              }}>
+                Start a new assessment
+              </Button>
+            </ButtonGroup>
           </>
         )
       })()}
