@@ -86,6 +86,36 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
   const [checkedQuestions, setCheckedQuestions] = useState<{ [key: string]: boolean }>({})
   const [recordingStep, setRecordingStep] = useState(1)
   const [formStep, setFormStep] = useState(1)
+  const [translateMode, setTranslateMode] = useState(false)
+  const [translateLanguage, setTranslateLanguage] = useState('')
+  const [showLanguageSelector, setShowLanguageSelector] = useState(false)
+
+  const translateLanguages = [
+    { code: 'ar-SA', label: 'Arabic' },
+    { code: 'bn-BD', label: 'Bengali' },
+    { code: 'zh-CN', label: 'Chinese (Mandarin)' },
+    { code: 'cs-CZ', label: 'Czech' },
+    { code: 'fa-IR', label: 'Farsi' },
+    { code: 'fr-FR', label: 'French' },
+    { code: 'gu-IN', label: 'Gujarati' },
+    { code: 'hi-IN', label: 'Hindi' },
+    { code: 'ku', label: 'Kurdish' },
+    { code: 'lt-LT', label: 'Lithuanian' },
+    { code: 'pl-PL', label: 'Polish' },
+    { code: 'pt-PT', label: 'Portuguese' },
+    { code: 'pa-IN', label: 'Punjabi' },
+    { code: 'ro-RO', label: 'Romanian' },
+    { code: 'ru-RU', label: 'Russian' },
+    { code: 'so-SO', label: 'Somali' },
+    { code: 'es-ES', label: 'Spanish' },
+    { code: 'sw-KE', label: 'Swahili' },
+    { code: 'ta-IN', label: 'Tamil' },
+    { code: 'ti-ER', label: 'Tigrinya' },
+    { code: 'tr-TR', label: 'Turkish' },
+    { code: 'uk-UA', label: 'Ukrainian' },
+    { code: 'ur-PK', label: 'Urdu' },
+    { code: 'vi-VN', label: 'Vietnamese' },
+  ]
   const [formFields, setFormFields] = useState<{ [key: string]: string }>({})
 
   const updateFormField = (field: string, value: string) => {
@@ -408,23 +438,29 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
     const recognition = new SpeechRecognition()
     recognition.continuous = true
     recognition.interimResults = true
-    recognition.lang = 'en-GB' // British English, change to 'en-US' if needed
+    recognition.lang = translateMode && translateLanguage ? translateLanguage : 'en-GB'
 
     recognition.onresult = (event: any) => {
       let interim = ''
       let final = ''
 
       for (let i = event.resultIndex; i < event.results.length; i++) {
-        const transcript = event.results[i][0].transcript
+        const transcriptText = event.results[i][0].transcript
         if (event.results[i].isFinal) {
-          final += transcript + ' '
+          final += transcriptText + ' '
         } else {
-          interim += transcript
+          interim += transcriptText
         }
       }
 
       if (final) {
-        setTranscript(prev => prev + final)
+        if (translateMode && translateLanguage) {
+          // Simulate AI translation to English
+          const selectedLang = translateLanguages.find(l => l.code === translateLanguage)
+          setTranscript(prev => prev + `[Translated from ${selectedLang?.label}] ${final}`)
+        } else {
+          setTranscript(prev => prev + final)
+        }
       }
       setInterimTranscript(interim)
     }
@@ -450,7 +486,7 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
         recognitionRef.current.stop()
       }
     }
-  }, [isRecording])
+  }, [isRecording, translateMode, translateLanguage])
 
   const startVoiceRecording = () => {
     if (!isSupported) {
@@ -647,14 +683,22 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
             marginBottom: '30px'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
-              <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 {!isPaused ? (
                   <strong className="govuk-tag govuk-tag--red">Recording</strong>
                 ) : (
                   <strong className="govuk-tag govuk-tag--yellow">Paused</strong>
                 )}
+                {translateMode && translateLanguage && (
+                  <strong className="govuk-tag govuk-tag--blue">
+                    Translating from {translateLanguages.find(l => l.code === translateLanguage)?.label}
+                  </strong>
+                )}
               </div>
               <ButtonGroup>
+                <Button onClick={() => setShowLanguageSelector(!showLanguageSelector)} variant="secondary">
+                  Translate
+                </Button>
                 <Button onClick={pauseRecording} variant="secondary">
                   {isPaused ? 'Resume' : 'Pause'}
                 </Button>
@@ -663,6 +707,41 @@ export const HomelessAssessment: React.FC<HomelessAssessmentProps> = ({
                 </Button>
               </ButtonGroup>
             </div>
+            {showLanguageSelector && (
+              <div style={{ marginTop: '15px', padding: '15px', backgroundColor: '#ffffff', border: '1px solid #b1b4b6' }}>
+                <fieldset className="govuk-fieldset">
+                  <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
+                    What language is your client speaking?
+                  </legend>
+                  <p className="govuk-hint">The AI will listen in this language and translate to English</p>
+                  <select
+                    className="govuk-select"
+                    id="translateLanguage"
+                    value={translateLanguage}
+                    onChange={(e) => {
+                      const lang = e.target.value
+                      setTranslateLanguage(lang)
+                      if (lang) {
+                        setTranslateMode(true)
+                        // Restart recognition with new language
+                        if (isRecording && !isPaused) {
+                          recognitionRef.current?.stop()
+                          setTimeout(() => recognitionRef.current?.start(), 200)
+                        }
+                      } else {
+                        setTranslateMode(false)
+                      }
+                      setShowLanguageSelector(false)
+                    }}
+                  >
+                    <option value="">English (no translation)</option>
+                    {translateLanguages.map(lang => (
+                      <option key={lang.code} value={lang.code}>{lang.label}</option>
+                    ))}
+                  </select>
+                </fieldset>
+              </div>
+            )}
           </div>
 
           {/* Progress indicator */}
